@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 — Page Not Found | CARDs 2.0</title>
+  <meta name="description" content="CARDs 2.0 page not found." />
+  <meta name="robots" content="noindex" />
+  <meta name="theme-color" content="#080808" />
+
+  <!--
+    IMPORTANT:
+    If your GitHub Pages URL is:
+    https://yourname.github.io/YOUR-REPO-NAME/
+    then replace YOUR-REPO-NAME below.
+
+    If you use a custom domain or your main user site, change it to:
+    <base href="/">
+  -->
+  <base href="/" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <script defer src="assets/js/app.js"></script>
+
+  <style>
+    .error-main {
+      min-height: calc(100svh - 96px);
+      display: grid;
+      align-items: center;
+      padding: 2rem 0 4rem;
+    }
+
+    .error-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(180px, 250px);
+      gap: clamp(1.25rem, 4vw, 3rem);
+      align-items: center;
+    }
+
+    .error-panel {
+      padding: clamp(1.25rem, 2.6vw, 2rem);
+      border-radius: var(--radius-xl);
+    }
+
+    .error-code {
+      margin: 0 0 0.5rem;
+      font-size: clamp(4.8rem, 16vw, 10rem);
+      line-height: 0.86;
+    }
+
+    .error-title {
+      margin: 0 0 0.55rem;
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      line-height: 1.02;
+    }
+
+    .error-text {
+      max-width: 38rem;
+      margin: 0;
+      color: var(--text-soft);
+      font-size: 1rem;
+    }
+
+    .error-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.35rem;
+    }
+
+    .error-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0.85rem 1.1rem;
+      border-radius: 999px;
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.03);
+      color: #ffffff;
+      transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        background 0.25s ease;
+    }
+
+    .error-link:hover {
+      transform: translateY(-2px);
+      border-color: rgba(241, 196, 15, 0.34);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .error-link.primary {
+      color: #171717;
+      font-weight: 700;
+      border-color: rgba(241, 196, 15, 0.55);
+      background: linear-gradient(135deg, #f3d66b, #e3b51c);
+    }
+
+    .error-visual {
+      width: clamp(180px, 24vw, 250px);
+      aspect-ratio: 2 / 3;
+      justify-self: center;
+    }
+
+    .error-note {
+      margin: 1rem 0 0;
+      color: var(--grey);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 900px) {
+      .error-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .error-visual {
+        justify-self: start;
+      }
+    }
+  </style>
+</head>
+<body data-page="404">
+  <div class="ambient ambient-stripes" aria-hidden="true"></div>
+  <div class="ambient ambient-vignette" aria-hidden="true"></div>
+
+  <div class="cursor" aria-hidden="true">
+    <span class="cursor-orb"></span>
+    <span class="cursor-shape"></span>
+  </div>
+
+  <header class="site-header">
+    <div class="container">
+      <nav class="nav-pill luxury-panel" aria-label="Primary navigation">
+        <a href="index.html" class="brand" aria-label="CARDs 2.0 Home">
+          <span class="brand-word">CARDs</span>
+          <span class="brand-version">2.0</span>
+        </a>
+
+        <div class="nav-links">
+          <a href="index.html" class="nav-link">Home</a>
+          <a href="gallery.html" class="nav-link">Gallery</a>
+          <a href="shop.html" class="nav-link">Shop</a>
+          <a href="arena.html" class="nav-link">Play Arena</a>
+          <a href="account.html" class="nav-link">Account</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="error-main">
+    <section class="container error-layout reveal">
+      <div class="error-panel luxury-panel">
+        <p class="section-kicker">404 Error</p>
+        <h1 class="hero-title error-code">404</h1>
+        <h2 class="error-title">That page is not in the vault.</h2>
+        <p class="error-text">
+          The address may be mistyped, the page may have moved, or it may not exist yet.
+          Return to the homepage and continue exploring CARDs 2.0.
+        </p>
+
+        <div class="error-actions">
+          <a href="index.html" class="error-link primary">Return Home</a>
+          <a href="gallery.html" class="error-link">Open Gallery</a>
+        </div>
+
+        <p class="error-note">
+          Lost link. Same universe.
+        </p>
+      </div>
+
+      <figure class="error-visual tilt-scene" data-tilt-scene data-tilt-max="10" aria-hidden="true">
+        <div class="card-container">
+          <div class="card-face card-back-frame">
+            <img
+              src="assets/images/cards/card_back.png"
+              alt=""
+              width="1024"
+              height="1536"
+            />
+            <span class="shine"></span>
+          </div>
+        </div>
+      </figure>
+    </section>
+  </main>
+
+<footer class="site-footer container">
+  <p class="muted">
+    © 2026 CARDs 2.0 — Website by Anirudh Gupta. Cards by Lakshya Singh.
+    <a href="https://github.com/AnAnonymousPotato" target="_blank" rel="noopener noreferrer">GitHub Profile</a>
+    ·
+    <a href="https://github.com/CARDs-2-0/CARDs-2-0.github.io" target="_blank" rel="noopener noreferrer">Repository</a>
+  </p>
+</footer>
+</body>
+</html>
