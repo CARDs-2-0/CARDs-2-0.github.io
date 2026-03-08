@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CARDs 2.0 — Home</title>
+  <meta name="description" content="CARDs 2.0 — premium handmade trading card experience." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@500;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <script defer src="assets/js/app.js"></script>
+</head>
+<body data-page="home">
+  <!-- Ambient Layers -->
+  <div class="speed-lines" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <!-- Custom Cursor -->
+  <div class="cursor-dot" aria-hidden="true"></div>
+  <div class="cursor-glow" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <nav class="nav container gilded-frame">
+      <a href="index.html" class="logo" aria-label="CARDs 2.0 Home">
+        <span>CARDs</span><em>2.0</em>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+        <li><a href="shop.html" class="nav-link">Shop</a></li>
+        <li><a href="arena.html" class="nav-link">Play Arena</a></li>
+        <li><a href="account.html" class="nav-link">Account</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero section container reveal">
+      <div class="hero-content">
+        <p class="eyebrow mono">HANDMADE TCG • GILDED MINIMALIST ERA</p>
+        <h1>CARDs 2.0</h1>
+        <p class="tagline">
+          A luxury digital vault for handcrafted legends —
+          where precision gameplay meets gallery-grade card art.
+        </p>
+      </div>
+
+      <div class="hero-visual gilded-frame">
+        <img src="assets/images/cards/card_back.png" alt="CARDs 2.0 card back design" />
+      </div>
+    </section>
+
+    <!-- FEATURED + NEW -->
+    <section class="section container reveal">
+      <div class="section-head">
+        <h2>Featured & New Arrival</h2>
+        <p class="mono muted">Curated spotlight from the current set.</p>
+      </div>
+
+      <div class="card-pair">
+        <article class="showcase-card gilded-frame">
+          <div class="card-meta">
+            <span class="rarity legendary">Legendary</span>
+            <h3>Anaconda</h3>
+            <p class="mono muted">Element: Grass • No. 9/45</p>
+          </div>
+          <div class="tilt-card">
+            <img src="assets/images/cards/Anaconda.jpg" alt="Anaconda Legendary card" />
+          </div>
+        </article>
+
+        <article class="showcase-card gilded-frame">
+          <div class="card-meta">
+            <span class="rarity common">Common</span>
+            <h3>Kirin</h3>
+            <p class="mono muted">Element: Magic • No. 3/45</p>
+          </div>
+          <div class="tilt-card">
+            <img src="assets/images/cards/Kirin.jpg" alt="Kirin Common card" />
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- LATEST NEWS -->
+    <section class="section container reveal">
+      <div class="section-head">
+        <h2>Latest News</h2>
+        <p class="mono muted">UI placeholders ready for future DB integration.</p>
+      </div>
+
+      <div class="news-grid">
+        <article class="news-item gilded-frame">
+          <p class="mono news-date">MAR 08, 2026</p>
+          <h3>Season Zero Teaser</h3>
+          <p>Set reveal visuals are now in final polish phase. Gameplay balancing in progress.</p>
+        </article>
+        <article class="news-item gilded-frame">
+          <p class="mono news-date">MAR 05, 2026</p>
+          <h3>Card Scan Pipeline Upgrade</h3>
+          <p>Improved handmade card image workflow for cleaner texture and color depth.</p>
+        </article>
+        <article class="news-item gilded-frame">
+          <p class="mono news-date">MAR 01, 2026</p>
+          <h3>Arena Prototype Internal Build</h3>
+          <p>Early duel interface tested with core layout blocks and animation standards.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- REVIEWS + FEEDBACK -->
+    <section class="section container reveal">
+      <div class="section-head">
+        <h2>Player Reviews</h2>
+        <p class="mono muted">Community voice + direct feedback channel.</p>
+      </div>
+
+      <div class="community-layout">
+        <div class="reviews-grid">
+          <article class="review-card gilded-frame">
+            <h3>“The cleanest TCG UI I’ve seen.”</h3>
+            <p class="muted">— NovaDeck</p>
+          </article>
+          <article class="review-card gilded-frame">
+            <h3>“The card art feels museum-grade.”</h3>
+            <p class="muted">— LumenPlayer</p>
+          </article>
+          <article class="review-card gilded-frame">
+            <h3>“Fast, elegant, and super readable.”</h3>
+            <p class="muted">— MonoMage</p>
+          </article>
+          <article class="review-card gilded-frame">
+            <h3>“Love the premium dark aesthetic.”</h3>
+            <p class="muted">— PhantomAce</p>
+          </article>
+        </div>
+
+        <aside class="feedback-box gilded-frame">
+          <h3>Send Feedback</h3>
+          <p class="muted">Rate your experience and drop your thoughts.</p>
+
+          <form>
+            <div class="star-row" role="radiogroup" aria-label="Rate from 1 to 5 stars">
+              <button type="button" class="star" data-value="1" aria-label="1 star">★</button>
+              <button type="button" class="star" data-value="2" aria-label="2 stars">★</button>
+              <button type="button" class="star" data-value="3" aria-label="3 stars">★</button>
+              <button type="button" class="star" data-value="4" aria-label="4 stars">★</button>
+              <button type="button" class="star" data-value="5" aria-label="5 stars">★</button>
+            </div>
+
+            <input type="hidden" id="ratingValue" name="rating" value="0" />
+
+            <label for="feedbackText" class="mono muted">Message</label>
+            <textarea id="feedbackText" rows="5" placeholder="Share your experience…"></textarea>
+
+            <button class="submit-disabled" type="button" disabled>
+              Submit (Backend Coming Soon)
+            </button>
+          </form>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer container">
+    <p class="mono muted">© 2026 CARDs 2.0 — Crafted with precision.</p>
+  </footer>
+</body>
+</html>
