@@ -15,27 +15,44 @@
     }
 
     const hour = new Date().getHours();
-
-    const buckets = {
-        morning: ["Good Morning", "Morning Glow", "Fresh Start", "Rise and Shine"],
-        afternoon: ["Good Afternoon", "Back in the Vault", "Collector Mode On", "Ready to Browse"],
-        evening: ["Good Evening", "Welcome Back", "Evening Collection Time", "Prime Duel Hour"],
-        night: ["Good Night", "Late Night Vault Run", "Night Shift Collector", "Still Hunting Cards"]
-    };
-
-    let pool = buckets.evening;
+    let greetings = ["Welcome Back", "Hello There", "Glad You're Here", "Nice to See You"];
 
     if (hour >= 5 && hour < 12) {
-        pool = buckets.morning;
+        greetings = [
+            "Good Morning",
+            "Morning",
+            "Hope Your Morning Is Going Well",
+            "Welcome Back"
+        ];
     } else if (hour >= 12 && hour < 17) {
-        pool = buckets.afternoon;
+        greetings = [
+            "Good Afternoon",
+            "Hope Your Day Is Going Well",
+            "Welcome Back",
+            "Nice to See You"
+        ];
     } else if (hour >= 17 && hour < 22) {
-        pool = buckets.evening;
+        greetings = [
+            "Good Evening",
+            "Hope You're Having a Good Evening",
+            "Welcome Back",
+            "Glad You're Here"
+        ];
     } else {
-        pool = buckets.night;
+        greetings = [
+            "Good Evening",
+            "Hope You're Doing Well",
+            "Welcome Back",
+            "Nice to See You"
+        ];
     }
 
-    greetingElement.textContent = pool[Math.floor(Math.random() * pool.length)];
+    if (Math.random() < 0.045) {
+        greetingElement.textContent = "The vault predicted your return.";
+        return;
+    }
+
+    greetingElement.textContent = greetings[Math.floor(Math.random() * greetings.length)];
 })();
 
 (() => {
@@ -70,19 +87,25 @@
         ".star-label"
     ].join(", ");
 
+    const orbHideSelector = [
+        "[data-tilt-scene]",
+        "[data-reveal-card]"
+    ].join(", ");
+
     let targetX = window.innerWidth / 2;
     let targetY = window.innerHeight / 2;
     let currentX = targetX;
     let currentY = targetY;
-    let textFocus = false;
 
     const setMode = (element) => {
         const isElement = element instanceof Element;
-        const onText = textFocus || Boolean(isElement && element.closest(textSelector));
+        const onText = Boolean(isElement && element.closest(textSelector));
         const onInteractive = Boolean(isElement && element.closest(interactiveSelector));
+        const hideOrb = Boolean(isElement && element.closest(orbHideSelector));
 
         cursor.classList.toggle("is-text", onText);
         cursor.classList.toggle("is-active", onInteractive && !onText);
+        cursor.classList.toggle("is-reveal", hideOrb);
     };
 
     const updateImmediate = () => {
@@ -128,21 +151,6 @@
     document.addEventListener("mouseout", (event) => {
         if (!event.relatedTarget) {
             hideCursor();
-        }
-    });
-
-    document.addEventListener("focusin", (event) => {
-        if (event.target instanceof Element && event.target.matches(textSelector)) {
-            textFocus = true;
-            setMode(event.target);
-            showCursor();
-        }
-    });
-
-    document.addEventListener("focusout", (event) => {
-        if (event.target instanceof Element && event.target.matches(textSelector)) {
-            textFocus = false;
-            setMode(document.elementFromPoint(targetX, targetY));
         }
     });
 
@@ -302,25 +310,8 @@
     }
 
     const revealCards = document.querySelectorAll("[data-reveal-card]");
-    const cursor = document.querySelector(".cursor");
-
-    if (!revealCards.length) {
-        return;
-    }
-
-    let activeCount = 0;
-
-    const syncCursorReveal = () => {
-        if (!cursor) {
-            return;
-        }
-
-        cursor.classList.toggle("is-reveal", activeCount > 0);
-    };
 
     revealCards.forEach((card) => {
-        let isActive = false;
-
         const updateReveal = (event) => {
             const rect = card.getBoundingClientRect();
             card.style.setProperty("--reveal-x", `${event.clientX - rect.left}px`);
@@ -328,12 +319,6 @@
         };
 
         card.addEventListener("pointerenter", (event) => {
-            if (!isActive) {
-                isActive = true;
-                activeCount += 1;
-                syncCursorReveal();
-            }
-
             card.classList.add("is-reveal-hover");
             updateReveal(event);
         });
@@ -342,12 +327,6 @@
 
         card.addEventListener("pointerleave", () => {
             card.classList.remove("is-reveal-hover");
-
-            if (isActive) {
-                isActive = false;
-                activeCount = Math.max(0, activeCount - 1);
-                syncCursorReveal();
-            }
         });
     });
 })();
