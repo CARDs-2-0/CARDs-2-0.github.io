@@ -360,10 +360,12 @@ input:focus-visible {
 /* Header */
 
 .site-header {
+    position: -webkit-sticky;
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 1000;
     padding: 1rem 0 0;
+    isolation: isolate;
 }
 
 .nav-pill {
@@ -1184,10 +1186,23 @@ input:focus-visible {
 
 @media (hover: none) and (pointer: coarse) {
     .site-header {
+        position: -webkit-sticky;
         position: sticky;
         top: 0;
-        z-index: 500;
+        z-index: 1000;
         padding-top: max(0.45rem, env(safe-area-inset-top));
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
+    }
+
+    .site-header .container {
+        position: relative;
+        z-index: 1000;
+    }
+
+    .nav-pill {
+        position: relative;
+        z-index: 1000;
     }
 
     .reveal-card::before,
