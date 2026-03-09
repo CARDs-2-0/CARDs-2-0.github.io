@@ -33,7 +33,7 @@ html {
 body {
     margin: 0;
     min-height: 100vh;
-    overflow-x: clip;
+    overflow-x: clip; /* Changed from hidden to clip for desktop */
     color: var(--white);
     background:
     radial-gradient(circle at 18% 10%, rgba(241, 196, 15, 0.05) 0%, transparent 28%),
@@ -1184,23 +1184,26 @@ input:focus-visible {
     transform: translate3d(0, 0, 0);
 }
 
+/* Touch Device Sticky Fallback */
+
 @media (hover: none) and (pointer: coarse) {
     .site-header {
-        position: -webkit-sticky;
-        position: sticky;
+        position: fixed; /* Bypasses Chrome Android overflow bugs entirely */
         top: 0;
-        z-index: 1000;
+        left: 0;
+        width: 100%;
+        z-index: 100;
         padding-top: max(0.45rem, env(safe-area-inset-top));
     }
 
     .site-header .container {
         position: relative;
-        z-index: 1000;
+        z-index: 100;
     }
 
     .nav-pill {
         position: relative;
-        z-index: 1000;
+        z-index: 100;
     }
 
     .reveal-card::before,
@@ -1215,7 +1218,14 @@ input:focus-visible {
     .hero-visual::before {
         display: none;
     }
+
+    /* Offset main content so it doesn't slide under the fixed header */
+    main {
+        overflow-x: clip; /* Moved from html/body to prevent scrollbars */
+        padding-top: 70px;
+    }
 }
+
 
 /* Responsive */
 
@@ -1243,7 +1253,7 @@ input:focus-visible {
 @media (max-width: 760px) {
     html,
     body {
-        overflow-x: clip;
+        overflow-x: visible; /* CRITICAL FIX: Clears overflow so Chrome Android sticky works if we used it */
     }
 
     .container {
