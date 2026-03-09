@@ -20,30 +20,30 @@
     if (hour >= 5 && hour < 12) {
         greetings = [
             "Good Morning",
-            "Morning",
             "Hope Your Morning Is Going Well",
-            "Welcome Back"
+            "Welcome Back",
+            "Nice to See You"
         ];
     } else if (hour >= 12 && hour < 17) {
         greetings = [
             "Good Afternoon",
             "Hope Your Day Is Going Well",
             "Welcome Back",
-            "Nice to See You"
+            "Glad You're Here"
         ];
     } else if (hour >= 17 && hour < 22) {
         greetings = [
             "Good Evening",
             "Hope You're Having a Good Evening",
             "Welcome Back",
-            "Glad You're Here"
+            "Nice to See You"
         ];
     } else {
         greetings = [
             "Good Evening",
             "Hope You're Doing Well",
             "Welcome Back",
-            "Nice to See You"
+            "Glad You're Here"
         ];
     }
 
@@ -192,14 +192,12 @@
 })();
 
 (() => {
-    if (
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-        window.matchMedia("(pointer: coarse)").matches
-    ) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         return;
     }
 
     const scenes = document.querySelectorAll("[data-tilt-scene]");
+    const hasFinePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
     scenes.forEach((scene) => {
         const container = scene.querySelector(".card-container");
@@ -211,7 +209,7 @@
         }
 
         let bounds;
-        let isHovering = false;
+        let isActive = false;
         let currentX = 0;
         let currentY = 0;
         let targetX = 0;
@@ -220,8 +218,20 @@
 
         const maxTilt = Number(scene.getAttribute("data-tilt-max")) || 12;
 
-        const animate = () => {
-            if (!isHovering) {
+        const updatePoint = (clientX, clientY) => {
+            if (!bounds) {
+                bounds = scene.getBoundingClientRect();
+            }
+
+            const x = clientX - bounds.left;
+            const y = clientY - bounds.top;
+
+            targetX = Math.max(-1, Math.min(1, (x / bounds.width) * 2 - 1));
+            targetY = Math.max(-1, Math.min(1, (y / bounds.height) * 2 - 1));
+        };
+
+        const render = () => {
+            if (!isActive) {
                 return;
             }
 
@@ -248,33 +258,21 @@
                    0 0 5px rgba(0, 0, 0, 0.4)
                    `;
 
-                   rafId = requestAnimationFrame(animate);
+                   rafId = requestAnimationFrame(render);
         };
 
-        scene.addEventListener("mouseenter", () => {
+        const start = () => {
             bounds = scene.getBoundingClientRect();
-            isHovering = true;
+            isActive = true;
             container.style.transition = "transform 0.08s ease-out";
 
             if (!rafId) {
-                rafId = requestAnimationFrame(animate);
+                rafId = requestAnimationFrame(render);
             }
-        });
+        };
 
-        scene.addEventListener("mousemove", (event) => {
-            if (!bounds) {
-                bounds = scene.getBoundingClientRect();
-            }
-
-            const x = event.clientX - bounds.left;
-            const y = event.clientY - bounds.top;
-
-            targetX = Math.max(-1, Math.min(1, (x / bounds.width) * 2 - 1));
-            targetY = Math.max(-1, Math.min(1, (y / bounds.height) * 2 - 1));
-        });
-
-        scene.addEventListener("mouseleave", () => {
-            isHovering = false;
+        const stop = () => {
+            isActive = false;
 
             if (rafId) {
                 cancelAnimationFrame(rafId);
@@ -286,14 +284,72 @@
 
             card.style.boxShadow = `
             0 0 5px rgba(0, 0, 0, 0.5),
-                               0 20px 60px rgba(0, 0, 0, 0.6)
-                               `;
+                   0 20px 60px rgba(0, 0, 0, 0.6)
+                   `;
 
-                               currentX = 0;
-                               currentY = 0;
-                               targetX = 0;
-                               targetY = 0;
-        });
+                   currentX = 0;
+                   currentY = 0;
+                   targetX = 0;
+                   targetY = 0;
+        };
+
+        if (hasFinePointer) {
+            scene.addEventListener("mouseenter", () => {
+                start();
+            });
+
+            scene.addEventListener("mousemove", (event) => {
+                updatePoint(event.clientX, event.clientY);
+            });
+
+            scene.addEventListener("mouseleave", () => {
+                stop();
+            });
+        }
+
+        scene.addEventListener(
+            "touchstart",
+            (event) => {
+                const touch = event.touches[0];
+                if (!touch) {
+                    return;
+                }
+
+                start();
+                updatePoint(touch.clientX, touch.clientY);
+            },
+            { passive: true }
+        );
+
+        scene.addEventListener(
+            "touchmove",
+            (event) => {
+                const touch = event.touches[0];
+                if (!touch || !isActive) {
+                    return;
+                }
+
+                updatePoint(touch.clientX, touch.clientY);
+                event.preventDefault();
+            },
+            { passive: false }
+        );
+
+        scene.addEventListener(
+            "touchend",
+            () => {
+                stop();
+            },
+            { passive: true }
+        );
+
+        scene.addEventListener(
+            "touchcancel",
+            () => {
+                stop();
+            },
+            { passive: true }
+        );
 
         window.addEventListener("resize", () => {
             bounds = scene.getBoundingClientRect();
@@ -302,32 +358,91 @@
 })();
 
 (() => {
-    if (
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-        window.matchMedia("(pointer: coarse)").matches
-    ) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         return;
     }
 
     const revealCards = document.querySelectorAll("[data-reveal-card]");
+    const hasFinePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
     revealCards.forEach((card) => {
-        const updateReveal = (event) => {
+        let clearTimer = 0;
+
+        const updateReveal = (clientX, clientY) => {
             const rect = card.getBoundingClientRect();
-            card.style.setProperty("--reveal-x", `${event.clientX - rect.left}px`);
-            card.style.setProperty("--reveal-y", `${event.clientY - rect.top}px`);
+            card.style.setProperty("--reveal-x", `${clientX - rect.left}px`);
+            card.style.setProperty("--reveal-y", `${clientY - rect.top}px`);
         };
 
-        card.addEventListener("pointerenter", (event) => {
+        const showReveal = () => {
+            window.clearTimeout(clearTimer);
             card.classList.add("is-reveal-hover");
-            updateReveal(event);
-        });
+        };
 
-        card.addEventListener("pointermove", updateReveal);
-
-        card.addEventListener("pointerleave", () => {
+        const hideReveal = () => {
             card.classList.remove("is-reveal-hover");
-        });
+        };
+
+        if (hasFinePointer) {
+            card.addEventListener("pointerenter", (event) => {
+                showReveal();
+                updateReveal(event.clientX, event.clientY);
+            });
+
+            card.addEventListener("pointermove", (event) => {
+                updateReveal(event.clientX, event.clientY);
+            });
+
+            card.addEventListener("pointerleave", () => {
+                hideReveal();
+            });
+        }
+
+        card.addEventListener(
+            "touchstart",
+            (event) => {
+                const touch = event.touches[0];
+                if (!touch) {
+                    return;
+                }
+
+                showReveal();
+                updateReveal(touch.clientX, touch.clientY);
+            },
+            { passive: true }
+        );
+
+        card.addEventListener(
+            "touchmove",
+            (event) => {
+                const touch = event.touches[0];
+                if (!touch) {
+                    return;
+                }
+
+                showReveal();
+                updateReveal(touch.clientX, touch.clientY);
+            },
+            { passive: true }
+        );
+
+        card.addEventListener(
+            "touchend",
+            () => {
+                clearTimer = window.setTimeout(() => {
+                    hideReveal();
+                }, 120);
+            },
+            { passive: true }
+        );
+
+        card.addEventListener(
+            "touchcancel",
+            () => {
+                hideReveal();
+            },
+            { passive: true }
+        );
     });
 })();
 
