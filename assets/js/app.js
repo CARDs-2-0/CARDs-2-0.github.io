@@ -261,10 +261,16 @@
                    rafId = requestAnimationFrame(render);
         };
 
-        const start = () => {
+        const start = (clientX, clientY) => {
             bounds = scene.getBoundingClientRect();
             isActive = true;
+            scene.classList.add("is-tilting");
+            shine.style.opacity = "1";
             container.style.transition = "transform 0.08s ease-out";
+
+            if (typeof clientX === "number" && typeof clientY === "number") {
+                updatePoint(clientX, clientY);
+            }
 
             if (!rafId) {
                 rafId = requestAnimationFrame(render);
@@ -273,6 +279,8 @@
 
         const stop = () => {
             isActive = false;
+            scene.classList.remove("is-tilting");
+            shine.style.opacity = "0";
 
             if (rafId) {
                 cancelAnimationFrame(rafId);
@@ -294,15 +302,21 @@
         };
 
         if (hasFinePointer) {
-            scene.addEventListener("mouseenter", () => {
-                start();
+            scene.addEventListener("pointerenter", (event) => {
+                if (event.pointerType === "touch") {
+                    return;
+                }
+                start(event.clientX, event.clientY);
             });
 
-            scene.addEventListener("mousemove", (event) => {
+            scene.addEventListener("pointermove", (event) => {
+                if (!isActive || event.pointerType === "touch") {
+                    return;
+                }
                 updatePoint(event.clientX, event.clientY);
             });
 
-            scene.addEventListener("mouseleave", () => {
+            scene.addEventListener("pointerleave", () => {
                 stop();
             });
         }
@@ -315,8 +329,7 @@
                     return;
                 }
 
-                start();
-                updatePoint(touch.clientX, touch.clientY);
+                start(touch.clientX, touch.clientY);
             },
             { passive: true }
         );
@@ -335,21 +348,8 @@
             { passive: false }
         );
 
-        scene.addEventListener(
-            "touchend",
-            () => {
-                stop();
-            },
-            { passive: true }
-        );
-
-        scene.addEventListener(
-            "touchcancel",
-            () => {
-                stop();
-            },
-            { passive: true }
-        );
+        scene.addEventListener("touchend", stop, { passive: true });
+        scene.addEventListener("touchcancel", stop, { passive: true });
 
         window.addEventListener("resize", () => {
             bounds = scene.getBoundingClientRect();
@@ -1145,10 +1145,16 @@
                        rafId = requestAnimationFrame(render);
             };
 
-            const start = () => {
+            const start = (clientX, clientY) => {
                 bounds = scene.getBoundingClientRect();
                 isActive = true;
+                scene.classList.add("is-tilting");
+                shine.style.opacity = "1";
                 container.style.transition = "transform 0.08s ease-out";
+
+                if (typeof clientX === "number" && typeof clientY === "number") {
+                    updatePoint(clientX, clientY);
+                }
 
                 if (!rafId) {
                     rafId = requestAnimationFrame(render);
@@ -1157,6 +1163,8 @@
 
             const stop = () => {
                 isActive = false;
+                scene.classList.remove("is-tilting");
+                shine.style.opacity = "0";
 
                 if (rafId) {
                     cancelAnimationFrame(rafId);
@@ -1181,8 +1189,7 @@
                     if (event.pointerType === "touch") {
                         return;
                     }
-                    start();
-                    updatePoint(event.clientX, event.clientY);
+                    start(event.clientX, event.clientY);
                 });
 
                 scene.addEventListener("pointermove", (event) => {
@@ -1192,9 +1199,7 @@
                     updatePoint(event.clientX, event.clientY);
                 });
 
-                scene.addEventListener("pointerleave", () => {
-                    stop();
-                });
+                scene.addEventListener("pointerleave", stop);
             }
 
             scene.addEventListener(
@@ -1204,8 +1209,7 @@
                     if (!touch) {
                         return;
                     }
-                    start();
-                    updatePoint(touch.clientX, touch.clientY);
+                    start(touch.clientX, touch.clientY);
                 },
                 { passive: true }
             );

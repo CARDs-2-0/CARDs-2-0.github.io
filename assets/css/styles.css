@@ -1088,6 +1088,8 @@ input:focus-visible {
 .card-back-frame {
     padding: 0;
     background: transparent;
+    border-radius: 22px;
+    overflow: hidden;
 }
 
 .card-back-frame img {
@@ -1104,21 +1106,35 @@ input:focus-visible {
 
 .shine {
     position: absolute;
-    inset: 0;
+    inset: -10%;
     border-radius: inherit;
     z-index: 2;
     pointer-events: none;
     opacity: 0;
-    transition: opacity 0.3s ease;
-    background: radial-gradient(
+    transition: opacity 0.22s ease;
+    background:
+    radial-gradient(
         circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-                                rgba(255, 255, 255, 0.28) 0%,
-                                rgba(255, 255, 255, 0.1) 26%,
-                                transparent 60%
+                    rgba(255, 255, 255, 0.34) 0%,
+                    rgba(255, 255, 255, 0.16) 16%,
+                    rgba(255, 255, 255, 0.05) 30%,
+                    rgba(255, 255, 255, 0) 52%
+    ),
+    linear-gradient(
+        120deg,
+        rgba(255, 255, 255, 0) 18%,
+                    rgba(255, 255, 255, 0.04) 38%,
+                    rgba(255, 255, 255, 0.14) 50%,
+                    rgba(255, 255, 255, 0.04) 62%,
+                    rgba(255, 255, 255, 0) 82%
     );
+    filter: blur(14px);
+    mix-blend-mode: screen;
+    transform: translateZ(0);
 }
 
-.tilt-scene:hover .shine {
+.tilt-scene:hover .shine,
+.tilt-scene.is-tilting .shine {
     opacity: 1;
 }
 
@@ -1175,14 +1191,19 @@ input:focus-visible {
         z-index: 100;
     }
 
-    .nav-pill::before {
+    .site-header .container {
+        position: relative;
+        z-index: 100;
+    }
+
+    .site-header .container::before {
         content: "";
-        display: block;
         position: absolute;
-        top: 6px;
-        bottom: 6px;
-        right: 0;
-        width: 48px;
+        top: 50%;
+        right: 8px;
+        transform: translateY(-50%);
+        width: 52px;
+        height: calc(100% - 12px);
         border-radius: 0 999px 999px 0;
         background: linear-gradient(
             90deg,
@@ -1191,14 +1212,14 @@ input:focus-visible {
                                     rgba(8, 8, 8, 0.96) 100%
         );
         pointer-events: none;
-        z-index: 3;
+        z-index: 101;
     }
 
-    .nav-pill::after {
+    .site-header .container::after {
         content: "›";
         position: absolute;
         top: 50%;
-        right: 12px;
+        right: 18px;
         transform: translateY(-50%);
         display: grid;
         place-items: center;
@@ -1208,8 +1229,7 @@ input:focus-visible {
         font-size: 1rem;
         line-height: 1;
         pointer-events: none;
-        z-index: 4;
-        background: none;
+        z-index: 102;
         opacity: 0.95;
     }
 
