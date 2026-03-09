@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CARDs 2.0 — Index</title>
+  <meta
+    name="description"
+    content="CARDs 2.0 Index — browse the current illustrated collection."
+  />
+  <meta name="theme-color" content="#080808" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <script defer src="assets/js/app.js"></script>
+</head>
+<body data-page="index">
+  <div class="ambient ambient-stripes" aria-hidden="true"></div>
+  <div class="ambient ambient-vignette" aria-hidden="true"></div>
+
+  <div class="cursor" aria-hidden="true">
+    <span class="cursor-orb"></span>
+    <span class="cursor-shape"></span>
+  </div>
+
+  <header class="site-header">
+    <div class="container">
+      <nav class="nav-pill luxury-panel" aria-label="Primary navigation">
+        <a href="index.html" class="brand" aria-label="CARDs 2.0 Home">
+          <span class="brand-word">CARDs</span>
+          <span class="brand-version">2.0</span>
+        </a>
+
+        <div class="nav-links">
+          <a href="index.html" class="nav-link">Home</a>
+          <a href="gallery.html" class="nav-link">Index</a>
+          <a href="shop.html" class="nav-link">Marketplace</a>
+          <a href="arena.html" class="nav-link">Arena</a>
+          <a href="account.html" class="nav-link">Account</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section container reveal">
+      <div class="index-page-head">
+        <p class="section-kicker">Index</p>
+        <h1 class="index-page-title">Collection Vault</h1>
+        <p class="section-copy index-page-copy">
+          Search, sort, and inspect the current CARDs 2.0 preview set. Unlock data is temporarily
+          faked until real accounts are connected later.
+        </p>
+      </div>
+
+      <form class="collection-toolbar luxury-panel" id="indexControls" role="search" novalidate>
+        <div class="collection-toolbar-grid">
+          <label class="collection-control collection-search">
+            <span class="collection-control-label">Search</span>
+            <input
+              id="collectionSearch"
+              class="collection-input"
+              type="search"
+              placeholder="Search names, numbers, stats, type, rarity..."
+              autocomplete="off"
+            />
+          </label>
+
+          <label class="collection-control">
+            <span class="collection-control-label">Rarity</span>
+            <select id="rarityFilter" class="collection-select">
+              <option value="all">All Rarities</option>
+              <option value="Common">Common</option>
+              <option value="Epic">Epic</option>
+              <option value="Legendary">Legendary</option>
+            </select>
+          </label>
+
+          <label class="collection-control">
+            <span class="collection-control-label">Type</span>
+            <select id="typeFilter" class="collection-select">
+              <option value="all">All Types</option>
+              <option value="Grass">Grass</option>
+              <option value="Fire">Fire</option>
+              <option value="Water">Water</option>
+              <option value="Air">Air</option>
+              <option value="Phantom">Phantom</option>
+              <option value="Magic">Magic</option>
+              <option value="Plasma">Plasma</option>
+            </select>
+          </label>
+
+          <label class="collection-control">
+            <span class="collection-control-label">Sort</span>
+            <select id="sortFilter" class="collection-select">
+              <option value="number">Set Number</option>
+              <option value="name">Name</option>
+              <option value="rarity">Rarity</option>
+              <option value="type">Type</option>
+              <option value="hp">Highest HP</option>
+              <option value="dmg">Highest DMG</option>
+              <option value="status">Unlocked First</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="collection-toolbar-footer">
+          <div class="collection-toggle" id="ownershipToggle">
+            <button type="button" class="is-active" data-view="all">All Cards</button>
+            <button type="button" data-view="unlocked">Unlocked Only</button>
+          </div>
+
+          <p class="collection-toolbar-meta" id="indexResultsMeta">
+            Showing the current illustrated preview set.
+          </p>
+        </div>
+      </form>
+
+      <section class="index-master-card luxury-panel reveal-card" data-reveal-card aria-labelledby="indexMasterTitle">
+        <div class="index-master-copy">
+          <p class="section-kicker">Master Card</p>
+          <h2 id="indexMasterTitle">Vault Progress</h2>
+          <p class="section-copy">
+            Temporary local preview data for now. Real collection progress will come later with accounts.
+          </p>
+        </div>
+
+        <div class="index-master-total">
+          <p class="index-master-value" id="masterUnlockedValue">5 <span>/ 45</span></p>
+          <p class="index-master-label">Cards Discovered</p>
+        </div>
+
+        <div class="index-master-stats">
+          <article class="index-master-stat">
+            <strong id="masterVisibleValue">11</strong>
+            <span>Visible in preview</span>
+          </article>
+          <article class="index-master-stat">
+            <strong id="masterLockedValue">5</strong>
+            <span>Currently locked</span>
+          </article>
+          <article class="index-master-stat">
+            <strong id="masterSpecialValue">1</strong>
+            <span id="masterSpecialLabel">Secret Seen</span>
+          </article>
+          <article class="index-master-stat">
+            <strong id="masterShownValue">11</strong>
+            <span>Shown right now</span>
+          </article>
+        </div>
+      </section>
+
+      <div class="vault-grid" id="collectionGrid" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <div class="card-detail-modal" id="cardDetailModal" hidden>
+    <div class="card-detail-backdrop" data-close-card-modal></div>
+
+    <div
+      class="card-detail-dialog luxury-panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="cardDetailTitle"
+    >
+      <button
+        type="button"
+        class="card-detail-close"
+        data-close-card-modal
+        aria-label="Close card details"
+      >
+        ×
+      </button>
+
+      <div class="card-detail-body" id="cardDetailBody"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer container">
+    <p class="muted">
+      © 2026 CARDs 2.0 — Website by Anirudh Gupta. Cards by Lakshya Singh.
+      <a href="https://github.com/AnAnonymousPotato" target="_blank" rel="noopener noreferrer">GitHub Profile</a>
+      ·
+      <a href="https://github.com/CARDs-2-0/CARDs-2-0.github.io" target="_blank" rel="noopener noreferrer">Repository</a>
+    </p>
+  </footer>
+</body>
+</html>
