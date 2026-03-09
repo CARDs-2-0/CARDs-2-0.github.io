@@ -267,31 +267,7 @@ input:focus-visible {
 }
 
 .luxury-panel::before {
-    content: "";
-    position: absolute;
-    inset: -1px;
-    padding: 1px;
-    border-radius: inherit;
-    background: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.18),
-                                rgba(241, 196, 15, 0),
-                                rgba(241, 196, 15, 0.78),
-                                rgba(255, 255, 255, 0.16)
-    );
-    background-size: 220% 220%;
-    opacity: 0;
-    animation: border-flow 7s linear infinite;
-    pointer-events: none;
-    transition: opacity 0.42s ease;
-    -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-    mask-composite: exclude;
+    display: none;
 }
 
 .luxury-panel::after {
@@ -305,13 +281,7 @@ input:focus-visible {
 
 .luxury-panel:hover::before,
 .luxury-panel:focus-within::before {
-    opacity: 0.95;
-}
-
-@keyframes border-flow {
-    to {
-        background-position: 200% 50%;
-    }
+    opacity: 0;
 }
 
 /* Brand text */
@@ -1602,6 +1572,7 @@ input:focus-visible {
     overscroll-behavior: contain;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    background-clip: padding-box;
 }
 
 .card-detail-dialog::-webkit-scrollbar {
@@ -2104,12 +2075,13 @@ input:focus-visible {
     }
 
     .card-detail-modal {
-        padding: 8px;
+        padding: calc(env(safe-area-inset-top) + 76px) 8px 12px;
+        place-items: start center;
     }
 
     .card-detail-dialog {
         width: calc(100vw - 12px);
-        max-height: calc(100svh - 16px);
+        max-height: calc(100svh - env(safe-area-inset-top) - 88px);
         padding: 1.05rem;
         overflow-x: hidden;
         overflow-y: auto;
