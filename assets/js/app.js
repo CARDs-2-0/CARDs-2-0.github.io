@@ -1079,6 +1079,7 @@
             }
 
             scene.dataset.collectionTiltBound = "true";
+            scene.style.display = "block";
 
             const container = scene.querySelector(".card-container");
             const card = scene.querySelector(".card-face");
@@ -1087,6 +1088,9 @@
             if (!container || !card || !shine) {
                 return;
             }
+
+            container.style.display = "block";
+            card.style.display = "block";
 
             let bounds;
             let isActive = false;
@@ -1173,11 +1177,24 @@
             };
 
             if (hasFinePointer) {
-                scene.addEventListener("mouseenter", start);
-                scene.addEventListener("mousemove", (event) => {
+                scene.addEventListener("pointerenter", (event) => {
+                    if (event.pointerType === "touch") {
+                        return;
+                    }
+                    start();
                     updatePoint(event.clientX, event.clientY);
                 });
-                scene.addEventListener("mouseleave", stop);
+
+                scene.addEventListener("pointermove", (event) => {
+                    if (!isActive || event.pointerType === "touch") {
+                        return;
+                    }
+                    updatePoint(event.clientX, event.clientY);
+                });
+
+                scene.addEventListener("pointerleave", () => {
+                    stop();
+                });
             }
 
             scene.addEventListener(
