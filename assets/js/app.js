@@ -15,31 +15,31 @@
     }
 
     const hour = new Date().getHours();
-    let greetings = ["Welcome Back", "Hello There", "Glad You're Here", "Nice to See You"];
+    let greetings =["Welcome Back", "Hello There", "Glad You're Here", "Nice to See You"];
 
     if (hour >= 5 && hour < 12) {
-        greetings = [
+        greetings =[
             "Good Morning",
             "Hope Your Morning Is Going Well",
             "Welcome Back",
             "Nice to See You"
         ];
     } else if (hour >= 12 && hour < 17) {
-        greetings = [
+        greetings =[
             "Good Afternoon",
             "Hope Your Day Is Going Well",
             "Welcome Back",
             "Glad You're Here"
         ];
     } else if (hour >= 17 && hour < 22) {
-        greetings = [
+        greetings =[
             "Good Evening",
             "Hope You're Having a Good Evening",
             "Welcome Back",
             "Nice to See You"
         ];
     } else {
-        greetings = [
+        greetings =[
             "Good Evening",
             "Hope You're Doing Well",
             "Welcome Back",
@@ -358,91 +358,34 @@
 })();
 
 (() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+        !window.matchMedia("(hover: hover) and (pointer: fine)").matches
+    ) {
         return;
     }
 
     const revealCards = document.querySelectorAll("[data-reveal-card]");
-    const hasFinePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
     revealCards.forEach((card) => {
-        let clearTimer = 0;
-
-        const updateReveal = (clientX, clientY) => {
+        const updateReveal = (event) => {
             const rect = card.getBoundingClientRect();
-            card.style.setProperty("--reveal-x", `${clientX - rect.left}px`);
-            card.style.setProperty("--reveal-y", `${clientY - rect.top}px`);
+            card.style.setProperty("--reveal-x", `${event.clientX - rect.left}px`);
+            card.style.setProperty("--reveal-y", `${event.clientY - rect.top}px`);
         };
 
-        const showReveal = () => {
-            window.clearTimeout(clearTimer);
+        card.addEventListener("pointerenter", (event) => {
             card.classList.add("is-reveal-hover");
-        };
+            updateReveal(event);
+        });
 
-        const hideReveal = () => {
+        card.addEventListener("pointermove", (event) => {
+            updateReveal(event);
+        });
+
+        card.addEventListener("pointerleave", () => {
             card.classList.remove("is-reveal-hover");
-        };
-
-        if (hasFinePointer) {
-            card.addEventListener("pointerenter", (event) => {
-                showReveal();
-                updateReveal(event.clientX, event.clientY);
-            });
-
-            card.addEventListener("pointermove", (event) => {
-                updateReveal(event.clientX, event.clientY);
-            });
-
-            card.addEventListener("pointerleave", () => {
-                hideReveal();
-            });
-        }
-
-        card.addEventListener(
-            "touchstart",
-            (event) => {
-                const touch = event.touches[0];
-                if (!touch) {
-                    return;
-                }
-
-                showReveal();
-                updateReveal(touch.clientX, touch.clientY);
-            },
-            { passive: true }
-        );
-
-        card.addEventListener(
-            "touchmove",
-            (event) => {
-                const touch = event.touches[0];
-                if (!touch) {
-                    return;
-                }
-
-                showReveal();
-                updateReveal(touch.clientX, touch.clientY);
-            },
-            { passive: true }
-        );
-
-        card.addEventListener(
-            "touchend",
-            () => {
-                clearTimer = window.setTimeout(() => {
-                    hideReveal();
-                }, 120);
-            },
-            { passive: true }
-        );
-
-        card.addEventListener(
-            "touchcancel",
-            () => {
-                hideReveal();
-            },
-            { passive: true }
-        );
+        });
     });
 })();
 

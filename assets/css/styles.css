@@ -54,6 +54,10 @@ img {
     max-width: 100%;
 }
 
+figure {
+    margin: 0;
+}
+
 a,
 button,
 input,
@@ -1176,6 +1180,28 @@ input:focus-visible {
 .reveal.in-view {
     opacity: 1;
     transform: translate3d(0, 0, 0);
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 500;
+        padding-top: max(0.45rem, env(safe-area-inset-top));
+    }
+
+    .reveal-card::before,
+    .reveal-card::after {
+        display: none;
+    }
+
+    .hero-visual {
+        justify-items: center;
+    }
+
+    .hero-visual::before {
+        display: none;
+    }
 }
 
 /* Responsive */

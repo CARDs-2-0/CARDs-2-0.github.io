@@ -126,6 +126,24 @@
         justify-self: start;
       }
     }
+
+    @media (max-width: 760px), (hover: none) and (pointer: coarse) {
+      .error-layout {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        text-align: center;
+      }
+
+      .error-actions {
+        justify-content: center;
+      }
+
+      .error-visual {
+        width: clamp(108px, 30vw, 138px);
+        justify-self: center;
+        margin: 0.35rem auto 0;
+      }
+    }
   </style>
 </head>
 <body data-page="404">
