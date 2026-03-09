@@ -1199,17 +1199,19 @@ input:focus-visible {
     .site-header .container::before {
         content: "";
         position: absolute;
-        top: 50%;
-        right: 8px;
-        transform: translateY(-50%);
-        width: 52px;
-        height: calc(100% - 12px);
-        border-radius: 0 999px 999px 0;
-        background: linear-gradient(
-            90deg,
-            rgba(8, 8, 8, 0) 0%,
-                                    rgba(8, 8, 8, 0.58) 52%,
-                                    rgba(8, 8, 8, 0.96) 100%
+        top: 0.6rem;
+        right: 0;
+        bottom: 0;
+        width: 84px;
+        border-radius: 999px;
+        background: radial-gradient(
+            92px 140% at 100% 50%,
+            rgba(8, 8, 8, 0.94) 0%,
+                                    rgba(8, 8, 8, 0.78) 28%,
+                                    rgba(8, 8, 8, 0.42) 52%,
+                                    rgba(8, 8, 8, 0.14) 74%,
+                                    rgba(8, 8, 8, 0.02) 88%,
+                                    rgba(8, 8, 8, 0) 100%
         );
         pointer-events: none;
         z-index: 101;
@@ -1218,19 +1220,20 @@ input:focus-visible {
     .site-header .container::after {
         content: "›";
         position: absolute;
-        top: 50%;
-        right: 18px;
+        top: calc(50% + 0.3rem);
+        right: 14px;
         transform: translateY(-50%);
         display: grid;
         place-items: center;
         width: 18px;
         height: 18px;
-        color: rgba(241, 196, 15, 0.78);
+        color: rgba(241, 196, 15, 0.76);
         font-size: 1rem;
         line-height: 1;
         pointer-events: none;
         z-index: 102;
-        opacity: 0.95;
+        opacity: 0.92;
+        text-shadow: 0 0 10px rgba(241, 196, 15, 0.16);
     }
 
     .reveal-card::before,
@@ -2153,6 +2156,799 @@ input:focus-visible {
     .card-detail-stat-grid,
     .card-detail-info-grid {
         grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* Marketplace page */
+
+.market-head {
+    margin-bottom: 1rem;
+}
+
+.market-title {
+    margin: 0 0 0.45rem;
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    line-height: 0.95;
+}
+
+.market-copy {
+    max-width: 48rem;
+}
+
+.market-wallet {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.15rem;
+    margin-bottom: 1rem;
+    border-radius: var(--radius-xl);
+}
+
+.market-wallet-copy {
+    display: grid;
+    gap: 0.22rem;
+}
+
+.market-wallet-label {
+    color: var(--grey);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.market-wallet-value {
+    font-size: clamp(1.9rem, 4vw, 3rem);
+    line-height: 1;
+    color: #f2d76b;
+}
+
+.market-wallet-note {
+    margin: 0;
+    max-width: 25rem;
+    color: var(--grey);
+    text-align: right;
+}
+
+.market-layout {
+    display: grid;
+    grid-template-columns: minmax(220px, 260px) minmax(0, 1fr) minmax(240px, 310px);
+    gap: 1rem;
+    align-items: start;
+}
+
+.market-sidebar,
+.market-stage,
+.market-detail,
+.opened-pack-panel {
+    padding: 1.1rem;
+    border-radius: var(--radius-xl);
+}
+
+.market-panel-title {
+    margin: 0 0 0.85rem;
+    font-size: 1.25rem;
+    line-height: 1.05;
+}
+
+.market-pack-list {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.market-pack-option {
+    width: 100%;
+    padding: 0.95rem;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.015));
+    text-align: left;
+    transition:
+    transform 0.22s ease,
+    border-color 0.22s ease,
+    background 0.22s ease;
+}
+
+.market-pack-option:hover:not(:disabled) {
+    transform: translateY(-2px);
+    border-color: rgba(241, 196, 15, 0.25);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.018));
+}
+
+.market-pack-option.is-active {
+    border-color: rgba(241, 196, 15, 0.34);
+    box-shadow: inset 0 0 0 1px rgba(241, 196, 15, 0.18);
+}
+
+.market-pack-option:disabled {
+    opacity: 0.55;
+}
+
+.market-pack-option-name,
+.market-pack-option-meta,
+.market-pack-option-price {
+    display: block;
+}
+
+.market-pack-option-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.market-pack-option-meta {
+    margin-top: 0.25rem;
+    color: var(--grey);
+    font-size: 0.84rem;
+}
+
+.market-pack-option-price {
+    margin-top: 0.45rem;
+    color: #e6c759;
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+.market-sidebar-note {
+    margin: 0.95rem 0 0;
+    color: var(--grey);
+    font-size: 0.9rem;
+}
+
+.market-stage-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.market-stage-title {
+    margin: 0;
+    font-size: clamp(1.5rem, 3.2vw, 2.4rem);
+    line-height: 1;
+}
+
+.market-stage-price {
+    margin: 0;
+    color: #f1cf53;
+    font-size: 0.96rem;
+    font-weight: 700;
+}
+
+.pack-theater {
+    display: grid;
+    gap: 0.85rem;
+    justify-items: center;
+    padding: 0.6rem 0 0.5rem;
+}
+
+.pack-scene {
+    position: relative;
+    width: min(100%, 430px);
+    min-height: 560px;
+    display: grid;
+    place-items: center;
+    perspective: 1600px;
+}
+
+.pack-product {
+    --rip-progress: 0;
+    position: relative;
+    width: min(100%, 320px);
+    aspect-ratio: 0.72 / 1;
+    transform-style: preserve-3d;
+    will-change: transform;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.pack-product.is-preview,
+.pack-product.is-sealed {
+    animation: market-pack-idle 6.8s ease-in-out infinite;
+}
+
+.pack-product.is-purchased .pack-product-inner {
+    animation: market-pack-pulse 0.62s ease;
+}
+
+@keyframes market-pack-idle {
+    0% {
+        transform: rotateX(10deg) rotateY(-15deg) translateY(0px);
+    }
+    50% {
+        transform: rotateX(2deg) rotateY(15deg) translateY(-10px);
+    }
+    100% {
+        transform: rotateX(10deg) rotateY(-15deg) translateY(0px);
+    }
+}
+
+@keyframes market-pack-pulse {
+    0% {
+        transform: scale(1);
+        box-shadow:
+        0 14px 44px rgba(0, 0, 0, 0.46),
+        0 0 0 rgba(241, 196, 15, 0);
+    }
+    50% {
+        transform: scale(1.03);
+        box-shadow:
+        0 20px 54px rgba(0, 0, 0, 0.5),
+        0 0 30px rgba(241, 196, 15, 0.16);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow:
+        0 14px 44px rgba(0, 0, 0, 0.46),
+        0 0 0 rgba(241, 196, 15, 0);
+    }
+}
+
+.pack-rip-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 18%;
+    z-index: 5;
+    display: grid;
+    place-items: center;
+    border-radius: 28px 28px 16px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-bottom-style: dashed;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03));
+    color: rgba(255, 255, 255, 0.92);
+    transform:
+    translate3d(calc(var(--rip-progress) * 160px), calc(var(--rip-progress) * -14px), 48px)
+    rotateZ(calc(var(--rip-progress) * 18deg));
+    transition:
+    transform 0.22s ease,
+    opacity 0.22s ease,
+    border-color 0.22s ease,
+    background 0.22s ease;
+    touch-action: none;
+}
+
+.pack-rip-top:hover {
+    border-color: rgba(241, 196, 15, 0.34);
+}
+
+.pack-rip-top-text {
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.pack-rip-top[hidden] {
+    display: none;
+}
+
+.pack-product.is-opened .pack-rip-top {
+    opacity: 0;
+    transform: translate3d(220px, -60px, 90px) rotateZ(24deg);
+    pointer-events: none;
+}
+
+.pack-product-inner {
+    position: relative;
+    height: 100%;
+    border-radius: 28px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow:
+    0 14px 44px rgba(0, 0, 0, 0.46),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015)),
+    #111111;
+    transform: translateZ(0);
+}
+
+.pack-product.is-standard .pack-product-inner {
+    background:
+    linear-gradient(160deg, rgba(42, 78, 16, 0.9), rgba(10, 10, 10, 0.96) 36%, rgba(118, 91, 8, 0.72) 100%),
+    #111111;
+}
+
+.pack-product.is-epic .pack-product-inner {
+    background:
+    linear-gradient(160deg, rgba(96, 24, 88, 0.92), rgba(10, 10, 10, 0.96) 36%, rgba(182, 72, 141, 0.62) 100%),
+    #111111;
+}
+
+.pack-foil-lines {
+    position: absolute;
+    inset: 0;
+    opacity: 0.22;
+    background: repeating-linear-gradient(
+        115deg,
+        transparent 0 16px,
+        rgba(255, 255, 255, 0.13) 16px 17px,
+                                          transparent 17px 34px
+    );
+    mix-blend-mode: screen;
+    pointer-events: none;
+}
+
+.pack-branding {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.22rem;
+    font-size: 1.2rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+
+.pack-kind {
+    position: absolute;
+    top: 19%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 1.15rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.pack-subtitle {
+    position: absolute;
+    top: 25.5%;
+    left: 50%;
+    width: 78%;
+    transform: translateX(-50%);
+    margin: 0;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.84rem;
+    text-align: center;
+}
+
+.pack-emblem {
+    position: absolute;
+    top: 34%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 86px;
+    height: 86px;
+    border-radius: 999px;
+    background:
+    radial-gradient(circle, rgba(255, 255, 255, 0.16), transparent 60%),
+    radial-gradient(circle, rgba(241, 196, 15, 0.42), rgba(241, 196, 15, 0.05) 60%, transparent 72%);
+    box-shadow: 0 0 34px rgba(241, 196, 15, 0.14);
+}
+
+.pack-product.is-epic .pack-emblem {
+    background:
+    radial-gradient(circle, rgba(255, 255, 255, 0.16), transparent 60%),
+    radial-gradient(circle, rgba(255, 92, 182, 0.42), rgba(255, 92, 182, 0.06) 60%, transparent 72%);
+    box-shadow: 0 0 34px rgba(255, 92, 182, 0.14);
+}
+
+.pack-stack-window {
+    position: absolute;
+    left: 50%;
+    bottom: 9.5%;
+    width: 56%;
+    height: 34%;
+    transform: translateX(-50%) translateZ(40px);
+    border-radius: 22px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+    display: grid;
+    place-items: center;
+    transition:
+    transform 0.22s ease,
+    border-color 0.22s ease,
+    background 0.22s ease;
+}
+
+.pack-stack-window.is-clickable:hover {
+    transform: translateX(-50%) translateZ(40px) scale(1.02);
+    border-color: rgba(241, 196, 15, 0.32);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.pack-stack-window:disabled {
+    opacity: 1;
+}
+
+.pack-stack {
+    position: relative;
+    width: 74%;
+    height: 80%;
+}
+
+.pack-stack-card {
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background:
+    repeating-linear-gradient(
+        115deg,
+        rgba(255, 255, 255, 0.02) 0 16px,
+                              rgba(241, 196, 15, 0.08) 16px 17px,
+                              rgba(255, 255, 255, 0.02) 17px 34px
+    ),
+    linear-gradient(180deg, rgba(24, 24, 24, 0.98), rgba(8, 8, 8, 0.98));
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.36);
+    transform: translateX(calc(var(--stack-layer) * 3px)) translateY(calc(var(--stack-layer) * -5px));
+}
+
+.pack-stack-count {
+    position: absolute;
+    right: 8px;
+    bottom: 6px;
+    color: #f1d974;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.pack-stack-empty {
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.pack-floor-glow {
+    position: absolute;
+    bottom: 26px;
+    left: 50%;
+    width: 62%;
+    height: 52px;
+    transform: translateX(-50%);
+    background: radial-gradient(ellipse, rgba(241, 196, 15, 0.18), transparent 68%);
+    filter: blur(12px);
+    opacity: 0.72;
+    pointer-events: none;
+}
+
+.pack-guidance {
+    margin: 0;
+    color: var(--grey);
+    text-align: center;
+    max-width: 34rem;
+}
+
+.market-stage-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 0.4rem;
+}
+
+.market-buy-button,
+.market-secondary-button {
+    min-height: 48px;
+    padding: 0.9rem 1.15rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    transition:
+    transform 0.22s ease,
+    background 0.22s ease,
+    border-color 0.22s ease,
+    color 0.22s ease;
+}
+
+.market-buy-button {
+    background: linear-gradient(135deg, #f3d66b, #dfb42c);
+    color: #111111;
+}
+
+.market-buy-button:hover:not(:disabled),
+.market-secondary-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+}
+
+.market-buy-button:disabled {
+    opacity: 0.62;
+}
+
+.market-secondary-button {
+    background: rgba(255, 255, 255, 0.03);
+    color: #ffffff;
+}
+
+.market-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+}
+
+.market-detail-stat {
+    padding: 0.85rem 0.9rem;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.market-detail-stat span {
+    display: block;
+    color: var(--grey);
+    font-size: 0.76rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.market-detail-stat strong {
+    display: block;
+    margin-top: 0.16rem;
+    font-size: 1.05rem;
+}
+
+.market-detail-copy {
+    margin: 0.95rem 0 0;
+    color: var(--text-soft);
+}
+
+.market-pull-status {
+    margin-top: 1rem;
+    padding: 0.95rem;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.02);
+    color: var(--grey);
+}
+
+.opened-pack-panel {
+    margin-top: 1rem;
+}
+
+.opened-pack-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.9rem;
+}
+
+.opened-pack-title {
+    margin: 0;
+    font-size: clamp(1.4rem, 3vw, 2.1rem);
+    line-height: 1;
+}
+
+.opened-pack-meta {
+    margin: 0;
+    color: var(--grey);
+    text-align: right;
+}
+
+.opened-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem;
+    min-height: 200px;
+}
+
+.opened-cards-empty {
+    grid-column: 1 / -1;
+    display: grid;
+    place-items: center;
+    min-height: 180px;
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.02);
+    color: var(--grey);
+    text-align: center;
+    padding: 1rem;
+}
+
+.market-pull-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    width: 100%;
+    padding: 0.85rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.015));
+    text-align: left;
+    transition:
+    transform 0.22s ease,
+    background 0.22s ease;
+}
+
+.market-pull-card:hover {
+    transform: translateY(-4px);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.018));
+}
+
+.market-pull-card.is-new-hit {
+    border-color: rgba(241, 196, 15, 0.28);
+}
+
+.market-pull-card.just-dealt {
+    animation: market-card-deal 0.52s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes market-card-deal {
+    0% {
+        opacity: 0;
+        transform: translateY(-24px) scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.market-pull-media {
+    display: block;
+    width: 100%;
+    aspect-ratio: 614 / 889;
+    border-radius: 18px;
+}
+
+.market-pull-media .card-container,
+.market-pull-media .card-face {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.market-pull-media .card-face,
+.market-pull-media .card-face img {
+    border-radius: 18px;
+}
+
+.market-pull-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.6rem;
+}
+
+.market-pull-name {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.1;
+}
+
+.market-pull-flag {
+    flex: 0 0 auto;
+    padding: 0.24rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.market-pull-flag.new {
+    background: linear-gradient(135deg, #f3d66b, #dfb42c);
+    color: #111111;
+}
+
+.market-pull-flag.owned {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.84);
+}
+
+.market-pull-meta {
+    color: var(--grey);
+    font-size: 0.82rem;
+}
+
+.market-pull-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    color: #cfb65d;
+    font-size: 0.78rem;
+}
+
+.market-pull-line span:last-child {
+    color: var(--text-soft);
+}
+
+@media (max-width: 1180px) {
+    .market-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .market-stage {
+        order: 1;
+    }
+
+    .market-sidebar {
+        order: 2;
+    }
+
+    .market-detail {
+        order: 3;
+    }
+
+    .market-pack-list {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 760px) {
+    .market-wallet {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .market-wallet-note {
+        text-align: left;
+    }
+
+    .market-pack-list {
+        grid-template-columns: 1fr;
+    }
+
+    .market-stage,
+    .market-sidebar,
+    .market-detail,
+    .opened-pack-panel {
+        padding: 0.95rem;
+    }
+
+    .market-stage-head,
+    .opened-pack-head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .opened-pack-meta {
+        text-align: left;
+    }
+
+    .pack-scene {
+        min-height: 430px;
+    }
+
+    .pack-product {
+        width: min(100%, 246px);
+    }
+
+    .pack-kind {
+        font-size: 1rem;
+    }
+
+    .pack-subtitle {
+        font-size: 0.78rem;
+    }
+
+    .market-stage-actions {
+        flex-direction: column;
+    }
+
+    .market-buy-button,
+    .market-secondary-button {
+        width: 100%;
+    }
+
+    .opened-cards-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.85rem;
+    }
+
+    .market-pull-card {
+        padding: 0.72rem;
+    }
+
+    .market-pull-name {
+        font-size: 0.9rem;
+    }
+
+    .market-pull-meta,
+    .market-pull-line {
+        font-size: 0.75rem;
     }
 }
 

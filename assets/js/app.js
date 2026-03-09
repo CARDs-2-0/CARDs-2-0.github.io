@@ -629,13 +629,27 @@
 
     const totalSetCards = 45;
 
-    const previewUnlockedIds = new Set([
+    const defaultUnlockedIds = [
         "skeleton",
         "anaconda",
         "dragon",
         "narwhal",
         "secret1"
-    ]);
+    ];
+
+    let previewUnlockedIds = new Set(defaultUnlockedIds);
+
+    try {
+        const storedUnlocked = JSON.parse(localStorage.getItem("cards20-unlocked") || "null");
+
+        if (Array.isArray(storedUnlocked) && storedUnlocked.length) {
+            previewUnlockedIds = new Set(storedUnlocked);
+        } else {
+            localStorage.setItem("cards20-unlocked", JSON.stringify(defaultUnlockedIds));
+        }
+    } catch (error) {
+        previewUnlockedIds = new Set(defaultUnlockedIds);
+    }
 
     const cards = [
         {
@@ -1458,4 +1472,940 @@
     });
 
     render();
+})();
+
+(() => {
+    if (document.body.dataset.page !== "shop") {
+        return;
+    }
+
+    const STORAGE_GOLD = "cards20-gold";
+    const STORAGE_UNLOCKED = "cards20-unlocked";
+
+    const DEFAULT_GOLD = 920;
+    const DEFAULT_UNLOCKED = [
+        "skeleton",
+        "anaconda",
+        "dragon",
+        "narwhal",
+        "secret1"
+    ];
+
+    const cardPool = [
+        {
+            id: "skeleton",
+            name: "Skeleton",
+            image: "assets/images/cards/Skeleton.jpg",
+            number: "1/45",
+            setNumber: 1,
+            type: "Grass",
+            rarity: "Common",
+            hp: 250,
+            dmg: 250
+        },
+        {
+            id: "anaconda",
+            name: "Anaconda",
+            image: "assets/images/cards/Anaconda.jpg",
+            number: "7/45",
+            setNumber: 7,
+            type: "Grass",
+            rarity: "Legendary",
+            hp: 350,
+            dmg: 300
+        },
+        {
+            id: "dragon",
+            name: "Dragon",
+            image: "assets/images/cards/Dragon.jpg",
+            number: "8/45",
+            setNumber: 8,
+            type: "Fire",
+            rarity: "Common",
+            hp: 150,
+            dmg: 300
+        },
+        {
+            id: "kirin",
+            name: "Kirin",
+            image: "assets/images/cards/Kirin.jpg",
+            number: "9/45",
+            setNumber: 9,
+            type: "Fire",
+            rarity: "Common",
+            hp: 180,
+            dmg: 290
+        },
+        {
+            id: "cracken",
+            name: "Cracken",
+            image: "assets/images/cards/Cracken.jpg",
+            number: "15/45",
+            setNumber: 15,
+            type: "Water",
+            rarity: "Common",
+            hp: 220,
+            dmg: 280
+        },
+        {
+            id: "penguin",
+            name: "Penguin",
+            image: "assets/images/cards/Penguin.jpg",
+            number: "16/45",
+            setNumber: 16,
+            type: "Water",
+            rarity: "Common",
+            hp: 270,
+            dmg: 230
+        },
+        {
+            id: "bird",
+            name: "Bird",
+            image: "assets/images/cards/Bird.jpg",
+            number: "22/45",
+            setNumber: 22,
+            type: "Air",
+            rarity: "Common",
+            hp: 275,
+            dmg: 225
+        },
+        {
+            id: "owl",
+            name: "Owl",
+            image: "assets/images/cards/Owl.jpg",
+            number: "29/45",
+            setNumber: 29,
+            type: "Phantom",
+            rarity: "Common",
+            hp: 210,
+            dmg: 260
+        },
+        {
+            id: "golem",
+            name: "Golem",
+            image: "assets/images/cards/Golem.jpg",
+            number: "36/45",
+            setNumber: 36,
+            type: "Magic",
+            rarity: "Common",
+            hp: 300,
+            dmg: 210
+        },
+        {
+            id: "narwhal",
+            name: "Narwhal",
+            image: "assets/images/cards/Narwhal.jpg",
+            number: "43/45",
+            setNumber: 43,
+            type: "Plasma",
+            rarity: "Epic",
+            hp: 250,
+            dmg: 325
+        },
+        {
+            id: "secret1",
+            name: "Secret Prototype",
+            image: "assets/images/cards/Secret1.jpg",
+            number: "46/45",
+            setNumber: 46,
+            type: "Unknown",
+            rarity: "Secret",
+            hp: 360,
+            dmg: 360
+        }
+    ];
+
+    const packConfigs = {
+        standard: {
+            id: "standard",
+            name: "Standard Pack",
+            cost: 120,
+            cards: 4,
+            focus: "Common-heavy",
+            best: "Legendary chance",
+            subtitle: "4 cards · common-heavy spread",
+            description:
+            "A steadier entry pack aimed at broad collection growth. It mostly produces commons, but stronger hits can still break through."
+        },
+        epic: {
+            id: "epic",
+            name: "Epic Pack",
+            cost: 260,
+            cards: 5,
+            focus: "Premium odds",
+            best: "Epic or better",
+            subtitle: "5 cards · premium odds",
+            description:
+            "A stronger pack with a more exciting ceiling. It leans toward better outcomes and gives a much better shot at premium pulls."
+        }
+    };
+
+    const goldValue = document.getElementById("marketGoldValue");
+    const packList = document.getElementById("marketPackList");
+    const sidebarNote = document.getElementById("marketSidebarNote");
+    const stageTitle = document.getElementById("marketStageTitle");
+    const stagePrice = document.getElementById("marketStagePrice");
+    const packProduct = document.getElementById("packProduct");
+    const packRipTop = document.getElementById("packRipTop");
+    const packKindText = document.getElementById("packKindText");
+    const packSubtitleText = document.getElementById("packSubtitleText");
+    const packGuidance = document.getElementById("packGuidance");
+    const packStackWindow = document.getElementById("packStackWindow");
+    const packStack = document.getElementById("packStack");
+    const buyPackButton = document.getElementById("buyPackButton");
+    const clearPackButton = document.getElementById("clearPackButton");
+    const detailCount = document.getElementById("marketDetailCount");
+    const detailFocus = document.getElementById("marketDetailFocus");
+    const detailBest = document.getElementById("marketDetailBest");
+    const detailPrice = document.getElementById("marketDetailPrice");
+    const detailCopy = document.getElementById("marketDetailCopy");
+    const pullStatus = document.getElementById("marketPullStatus");
+    const openedPackMeta = document.getElementById("openedPackMeta");
+    const revealedCards = document.getElementById("revealedCards");
+
+    if (
+        !goldValue ||
+        !packList ||
+        !sidebarNote ||
+        !stageTitle ||
+        !stagePrice ||
+        !packProduct ||
+        !packRipTop ||
+        !packKindText ||
+        !packSubtitleText ||
+        !packGuidance ||
+        !packStackWindow ||
+        !packStack ||
+        !buyPackButton ||
+        !clearPackButton ||
+        !detailCount ||
+        !detailFocus ||
+        !detailBest ||
+        !detailPrice ||
+        !detailCopy ||
+        !pullStatus ||
+        !openedPackMeta ||
+        !revealedCards
+    ) {
+        return;
+    }
+
+    const state = {
+        gold: loadGold(),
+ unlocked: loadUnlocked(),
+ selectedPack: "standard",
+ currentPack: null,
+ drag: {
+     active: false,
+     pointerId: null,
+     startX: 0,
+     progress: 0
+ }
+    };
+
+    function loadGold() {
+        const parsed = Number(localStorage.getItem(STORAGE_GOLD));
+        if (Number.isFinite(parsed) && parsed >= 0) {
+            return Math.floor(parsed);
+        }
+
+        localStorage.setItem(STORAGE_GOLD, String(DEFAULT_GOLD));
+        return DEFAULT_GOLD;
+    }
+
+    function saveGold(value) {
+        state.gold = Math.max(0, Math.floor(value));
+        localStorage.setItem(STORAGE_GOLD, String(state.gold));
+    }
+
+    function loadUnlocked() {
+        try {
+            const parsed = JSON.parse(localStorage.getItem(STORAGE_UNLOCKED) || "null");
+            if (Array.isArray(parsed) && parsed.length) {
+                return new Set(parsed);
+            }
+        } catch (error) {
+            //
+        }
+
+        localStorage.setItem(STORAGE_UNLOCKED, JSON.stringify(DEFAULT_UNLOCKED));
+        return new Set(DEFAULT_UNLOCKED);
+    }
+
+    function saveUnlocked() {
+        localStorage.setItem(STORAGE_UNLOCKED, JSON.stringify(Array.from(state.unlocked)));
+    }
+
+    function getSelectedConfig() {
+        return packConfigs[state.selectedPack];
+    }
+
+    function randomFrom(list) {
+        return list[Math.floor(Math.random() * list.length)];
+    }
+
+    function shuffle(list) {
+        const copy = [...list];
+        for (let index = copy.length - 1; index > 0; index -= 1) {
+            const swapIndex = Math.floor(Math.random() * (index + 1));
+            [copy[index], copy[swapIndex]] = [copy[swapIndex], copy[index]];
+        }
+        return copy;
+    }
+
+    function uniquePick(pool, excluded) {
+        const available = pool.filter((card) => !excluded.has(card.id));
+        const source = available.length ? available : pool;
+        const card = randomFrom(source);
+        excluded.add(card.id);
+        return card;
+    }
+
+    function pickWeightedRarity(weights) {
+        const total = weights.reduce((sum, entry) => sum + entry.weight, 0);
+        let roll = Math.random() * total;
+
+        for (const entry of weights) {
+            roll -= entry.weight;
+            if (roll <= 0) {
+                return entry.rarity;
+            }
+        }
+
+        return weights[weights.length - 1].rarity;
+    }
+
+    function poolByRarity(rarity) {
+        return cardPool.filter((card) => card.rarity === rarity);
+    }
+
+    function pullByRarity(rarityList, excluded) {
+        const pool = cardPool.filter((card) => rarityList.includes(card.rarity) && !excluded.has(card.id));
+
+        if (pool.length) {
+            return uniquePick(pool, excluded);
+        }
+
+        return uniquePick(cardPool, excluded);
+    }
+
+    function generateStandardPack() {
+        const excluded = new Set();
+        const commons = poolByRarity("Common");
+        const pulls = [
+            uniquePick(commons, excluded),
+ uniquePick(commons, excluded),
+ uniquePick(commons, excluded)
+        ];
+
+        const bonusRarity = pickWeightedRarity([
+            { rarity: "Common", weight: 70 },
+            { rarity: "Epic", weight: 18 },
+            { rarity: "Legendary", weight: 9 },
+            { rarity: "Secret", weight: 3 }
+        ]);
+
+        pulls.push(pullByRarity([bonusRarity], excluded));
+
+        return shuffle(pulls);
+    }
+
+    function generateEpicPack() {
+        const excluded = new Set();
+        const commons = poolByRarity("Common");
+        const pulls = [
+            uniquePick(commons, excluded),
+ uniquePick(commons, excluded)
+        ];
+
+        const midRarity = pickWeightedRarity([
+            { rarity: "Common", weight: 54 },
+            { rarity: "Epic", weight: 28 },
+            { rarity: "Legendary", weight: 14 },
+            { rarity: "Secret", weight: 4 }
+        ]);
+
+        pulls.push(pullByRarity([midRarity], excluded));
+
+        const guaranteedPremium = pickWeightedRarity([
+            { rarity: "Epic", weight: 68 },
+            { rarity: "Legendary", weight: 25 },
+            { rarity: "Secret", weight: 7 }
+        ]);
+
+        pulls.push(pullByRarity([guaranteedPremium], excluded));
+
+        const bonusRarity = pickWeightedRarity([
+            { rarity: "Common", weight: 28 },
+            { rarity: "Epic", weight: 38 },
+            { rarity: "Legendary", weight: 24 },
+            { rarity: "Secret", weight: 10 }
+        ]);
+
+        pulls.push(pullByRarity([bonusRarity], excluded));
+
+        return shuffle(pulls);
+    }
+
+    function generatePack(packId) {
+        return packId === "epic" ? generateEpicPack() : generateStandardPack();
+    }
+
+    function setRipProgress(progress) {
+        const clamped = Math.max(0, Math.min(1, progress));
+        state.drag.progress = clamped;
+        packProduct.style.setProperty("--rip-progress", String(clamped));
+    }
+
+    function resetRipProgress() {
+        state.drag.active = false;
+        state.drag.pointerId = null;
+        state.drag.startX = 0;
+        setRipProgress(0);
+    }
+
+    function buySelectedPack() {
+        const config = getSelectedConfig();
+
+        if (state.currentPack && !state.currentPack.complete) {
+            return;
+        }
+
+        if (state.gold < config.cost) {
+            return;
+        }
+
+        saveGold(state.gold - config.cost);
+
+        const generated = generatePack(config.id).map((card) => ({
+            ...card,
+            isNewHit: !state.unlocked.has(card.id)
+        }));
+
+        state.currentPack = {
+            type: config.id,
+            ripped: false,
+            revealIndex: 0,
+            cards: generated,
+            revealed: [],
+            complete: false
+        };
+
+        packProduct.classList.remove("is-purchased");
+        void packProduct.offsetWidth;
+        packProduct.classList.add("is-purchased");
+
+        window.setTimeout(() => {
+            packProduct.classList.remove("is-purchased");
+        }, 700);
+
+        renderMarketplace();
+    }
+
+    function revealNextCard() {
+        if (!state.currentPack || !state.currentPack.ripped || state.currentPack.complete) {
+            return;
+        }
+
+        const next = state.currentPack.cards[state.currentPack.revealIndex];
+        if (!next) {
+            return;
+        }
+
+        state.currentPack.revealIndex += 1;
+        state.currentPack.revealed.push(next);
+
+        if (!state.unlocked.has(next.id)) {
+            state.unlocked.add(next.id);
+            saveUnlocked();
+        }
+
+        if (state.currentPack.revealIndex >= state.currentPack.cards.length) {
+            state.currentPack.complete = true;
+        }
+
+        renderMarketplace();
+        bindMarketTilt(revealedCards);
+    }
+
+    function clearCurrentPack() {
+        state.currentPack = null;
+        resetRipProgress();
+        renderMarketplace();
+    }
+
+    function formatRarityText(card) {
+        return `${card.rarity} · ${card.type}`;
+    }
+
+    function renderGold() {
+        goldValue.textContent = String(state.gold);
+    }
+
+    function renderPackButtons() {
+        const hasActiveUnfinishedPack = Boolean(state.currentPack && !state.currentPack.complete);
+
+        packList.querySelectorAll("[data-pack-option]").forEach((button) => {
+            if (!(button instanceof HTMLButtonElement)) {
+                return;
+            }
+
+            const isSelected = button.dataset.packOption === state.selectedPack;
+            button.classList.toggle("is-active", isSelected);
+            button.disabled = hasActiveUnfinishedPack;
+        });
+    }
+
+    function renderDetails() {
+        const config = getSelectedConfig();
+
+        stageTitle.textContent = config.name;
+        stagePrice.textContent = `${config.cost} Gold`;
+
+        detailCount.textContent = String(config.cards);
+        detailFocus.textContent = config.focus;
+        detailBest.textContent = config.best;
+        detailPrice.textContent = `${config.cost} Gold`;
+        detailCopy.textContent = config.description;
+
+        sidebarNote.textContent = state.currentPack && !state.currentPack.complete
+        ? "Finish opening the current pack before switching products."
+        : "More products can be added here later without changing the overall layout.";
+    }
+
+    function renderPackShell() {
+        const activePack = state.currentPack;
+        const selectedConfig = getSelectedConfig();
+        const activeConfig = activePack ? packConfigs[activePack.type] : selectedConfig;
+
+        packProduct.className = `pack-product is-${activeConfig.id}`;
+
+        if (!activePack) {
+            packProduct.classList.add("is-preview");
+        } else if (!activePack.ripped) {
+            packProduct.classList.add("is-sealed");
+        } else {
+            packProduct.classList.add("is-opened");
+        }
+
+        packKindText.textContent = activeConfig.name;
+        packSubtitleText.textContent = activePack && activePack.ripped
+        ? `${activePack.cards.length - activePack.revealIndex} card${activePack.cards.length - activePack.revealIndex === 1 ? "" : "s"} left inside`
+        : activeConfig.subtitle;
+
+        packRipTop.hidden = !(activePack && !activePack.ripped);
+
+        if (!activePack) {
+            packGuidance.textContent = "Buy a pack to begin. Then drag across the top seam to tear it open.";
+        } else if (!activePack.ripped) {
+            packGuidance.textContent = "Drag the top seal to the right until the wrapper tears open.";
+        } else if (!activePack.complete) {
+            packGuidance.textContent = "Tap the opened stack to deal the next card onto the table.";
+        } else {
+            packGuidance.textContent = "Pack cleared. Buy another one or inspect your current pulls below.";
+        }
+
+        if (!activePack) {
+            pullStatus.textContent = "No active pack yet.";
+        } else if (!activePack.ripped) {
+            pullStatus.textContent = `${activeConfig.name} purchased. Tear the top strip to open it.`;
+        } else if (!activePack.complete) {
+            pullStatus.textContent = `${activePack.cards.length - activePack.revealIndex} card(s) still inside this pack.`;
+        } else {
+            pullStatus.textContent = `${activePack.cards.length} card(s) revealed from this ${activeConfig.name}.`;
+        }
+
+        if (!activePack) {
+            openedPackMeta.textContent = "Buy and open a pack to start revealing cards.";
+        } else if (!activePack.ripped) {
+            openedPackMeta.textContent = "Sealed pack ready. Tear it open first.";
+        } else if (!activePack.complete) {
+            openedPackMeta.textContent = `${activePack.revealIndex} of ${activePack.cards.length} cards revealed.`;
+        } else {
+            openedPackMeta.textContent = `Pack complete · ${activePack.cards.length} cards revealed.`;
+        }
+
+        renderPackStack();
+        updateActionButtons();
+    }
+
+    function renderPackStack() {
+        const activePack = state.currentPack;
+
+        if (!activePack) {
+            const previewCount = getSelectedConfig().cards;
+            packStackWindow.disabled = true;
+            packStackWindow.classList.remove("is-clickable");
+            packStack.innerHTML = createStackMarkup(previewCount, false);
+            return;
+        }
+
+        if (!activePack.ripped) {
+            packStackWindow.disabled = true;
+            packStackWindow.classList.remove("is-clickable");
+            packStack.innerHTML = createStackMarkup(activePack.cards.length, false);
+            return;
+        }
+
+        const remaining = activePack.cards.length - activePack.revealIndex;
+
+        if (remaining > 0) {
+            packStackWindow.disabled = false;
+            packStackWindow.classList.add("is-clickable");
+            packStack.innerHTML = createStackMarkup(remaining, true);
+        } else {
+            packStackWindow.disabled = true;
+            packStackWindow.classList.remove("is-clickable");
+            packStack.innerHTML = `<div class="pack-stack-empty">Empty</div>`;
+        }
+    }
+
+    function createStackMarkup(total, isOpen) {
+        const visibleLayers = Math.min(total, 4);
+        let markup = "";
+
+        for (let index = visibleLayers - 1; index >= 0; index -= 1) {
+            markup += `<div class="pack-stack-card" style="--stack-layer:${index};"></div>`;
+        }
+
+        markup += `<div class="pack-stack-count">${total} left</div>`;
+
+        if (!isOpen) {
+            markup += "";
+        }
+
+        return markup;
+    }
+
+    function updateActionButtons() {
+        const config = getSelectedConfig();
+        const activePack = state.currentPack;
+        const canAfford = state.gold >= config.cost;
+
+        clearPackButton.hidden = !activePack;
+
+        if (!activePack || activePack.complete) {
+            buyPackButton.disabled = !canAfford;
+            buyPackButton.textContent = canAfford
+            ? `Buy ${config.name} — ${config.cost} Gold`
+            : `Not Enough Gold — ${config.cost} Gold`;
+            return;
+        }
+
+        if (!activePack.ripped) {
+            buyPackButton.disabled = true;
+            buyPackButton.textContent = "Tear Open Current Pack";
+            return;
+        }
+
+        buyPackButton.disabled = true;
+        buyPackButton.textContent = "Reveal Cards From The Pack";
+    }
+
+    function renderRevealedCards() {
+        const activePack = state.currentPack;
+
+        if (!activePack || activePack.revealed.length === 0) {
+            revealedCards.innerHTML = `
+            <div class="opened-cards-empty">
+            Your revealed cards will appear here after you tear open a pack and start pulling from it.
+            </div>
+            `;
+            return;
+        }
+
+        revealedCards.innerHTML = activePack.revealed
+        .map((card, index) => {
+            const pullStatusText = card.isNewHit ? "New" : "Owned";
+            const pullStatusClass = card.isNewHit ? "new" : "owned";
+
+            return `
+            <article class="market-pull-card ${card.isNewHit ? "is-new-hit" : ""} ${index === activePack.revealed.length - 1 ? "just-dealt" : ""}">
+            <div class="market-pull-media tilt-scene" data-market-tilt data-tilt-max="10">
+            <div class="card-container">
+            <div class="card-face">
+            <img src="${card.image}" alt="${card.name} card" width="614" height="889" />
+            <span class="shine"></span>
+            </div>
+            </div>
+            </div>
+
+            <div class="market-pull-head">
+            <h3 class="market-pull-name">${card.name}</h3>
+            <span class="market-pull-flag ${pullStatusClass}">${pullStatusText}</span>
+            </div>
+
+            <div class="market-pull-meta">${formatRarityText(card)}</div>
+            <div class="market-pull-line">
+            <span>${card.number}</span>
+            <span>HP ${card.hp} / DMG ${card.dmg}</span>
+            </div>
+            </article>
+            `;
+        })
+        .join("");
+    }
+
+    function renderMarketplace() {
+        renderGold();
+        renderPackButtons();
+        renderDetails();
+        renderPackShell();
+        renderRevealedCards();
+    }
+
+    function bindMarketTilt(root) {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            return;
+        }
+
+        const scenes = root.querySelectorAll("[data-market-tilt]");
+        const hasFinePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+        scenes.forEach((scene) => {
+            if (scene.dataset.marketTiltBound === "true") {
+                return;
+            }
+
+            scene.dataset.marketTiltBound = "true";
+            scene.style.display = "block";
+
+            const container = scene.querySelector(".card-container");
+            const card = scene.querySelector(".card-face");
+            const shine = scene.querySelector(".shine");
+
+            if (!container || !card || !shine) {
+                return;
+            }
+
+            container.style.display = "block";
+            card.style.display = "block";
+
+            let bounds;
+            let isActive = false;
+            let currentX = 0;
+            let currentY = 0;
+            let targetX = 0;
+            let targetY = 0;
+            let rafId = 0;
+
+            const maxTilt = Number(scene.getAttribute("data-tilt-max")) || 10;
+
+            const updatePoint = (clientX, clientY) => {
+                if (!bounds) {
+                    bounds = scene.getBoundingClientRect();
+                }
+
+                const x = clientX - bounds.left;
+                const y = clientY - bounds.top;
+
+                targetX = Math.max(-1, Math.min(1, (x / bounds.width) * 2 - 1));
+                targetY = Math.max(-1, Math.min(1, (y / bounds.height) * 2 - 1));
+            };
+
+            const render = () => {
+                if (!isActive) {
+                    return;
+                }
+
+                currentX += (targetX - currentX) * 0.1;
+                currentY += (targetY - currentY) * 0.1;
+
+                const rotateY = currentX * maxTilt;
+                const rotateX = currentY * -maxTilt;
+
+                container.style.transform =
+                `rotateY(${rotateY}deg) rotateX(${rotateX}deg) scale3d(1.03, 1.03, 1.03)`;
+
+                const mouseXPercent = ((currentX + 1) / 2) * 100;
+                const mouseYPercent = ((currentY + 1) / 2) * 100;
+
+                shine.style.setProperty("--mouse-x", `${mouseXPercent}%`);
+                shine.style.setProperty("--mouse-y", `${mouseYPercent}%`);
+
+                const shadowX = -rotateY * 0.6;
+                const shadowY = rotateX * 0.6;
+
+                card.style.boxShadow = `
+                ${shadowX}px ${shadowY + 20}px 60px rgba(0, 0, 0, 0.5),
+                       0 0 5px rgba(0, 0, 0, 0.4)
+                       `;
+
+                       rafId = requestAnimationFrame(render);
+            };
+
+            const start = (clientX, clientY) => {
+                bounds = scene.getBoundingClientRect();
+                isActive = true;
+                scene.classList.add("is-tilting");
+                shine.style.opacity = "1";
+                container.style.transition = "transform 0.08s ease-out";
+
+                if (typeof clientX === "number" && typeof clientY === "number") {
+                    updatePoint(clientX, clientY);
+                }
+
+                if (!rafId) {
+                    rafId = requestAnimationFrame(render);
+                }
+            };
+
+            const stop = () => {
+                isActive = false;
+                scene.classList.remove("is-tilting");
+                shine.style.opacity = "0";
+
+                if (rafId) {
+                    cancelAnimationFrame(rafId);
+                    rafId = 0;
+                }
+
+                container.style.transition = "transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)";
+                container.style.transform = "rotateY(0deg) rotateX(0deg) scale3d(1, 1, 1)";
+                card.style.boxShadow = `
+                0 0 5px rgba(0, 0, 0, 0.5),
+                       0 20px 60px rgba(0, 0, 0, 0.6)
+                       `;
+
+                       currentX = 0;
+                       currentY = 0;
+                       targetX = 0;
+                       targetY = 0;
+            };
+
+            if (hasFinePointer) {
+                scene.addEventListener("pointerenter", (event) => {
+                    if (event.pointerType === "touch") {
+                        return;
+                    }
+                    start(event.clientX, event.clientY);
+                });
+
+                scene.addEventListener("pointermove", (event) => {
+                    if (!isActive || event.pointerType === "touch") {
+                        return;
+                    }
+                    updatePoint(event.clientX, event.clientY);
+                });
+
+                scene.addEventListener("pointerleave", stop);
+            }
+
+            scene.addEventListener(
+                "touchstart",
+                (event) => {
+                    const touch = event.touches[0];
+                    if (!touch) {
+                        return;
+                    }
+                    start(touch.clientX, touch.clientY);
+                },
+                { passive: true }
+            );
+
+            scene.addEventListener(
+                "touchmove",
+                (event) => {
+                    const touch = event.touches[0];
+                    if (!touch || !isActive) {
+                        return;
+                    }
+                    updatePoint(touch.clientX, touch.clientY);
+                    event.preventDefault();
+                },
+                { passive: false }
+            );
+
+            scene.addEventListener("touchend", stop, { passive: true });
+            scene.addEventListener("touchcancel", stop, { passive: true });
+        });
+    }
+
+    packList.addEventListener("click", (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) {
+            return;
+        }
+
+        const button = target.closest("[data-pack-option]");
+        if (!(button instanceof HTMLButtonElement)) {
+            return;
+        }
+
+        if (state.currentPack && !state.currentPack.complete) {
+            return;
+        }
+
+        const packId = button.dataset.packOption;
+        if (!packId || !(packId in packConfigs)) {
+            return;
+        }
+
+        state.selectedPack = packId;
+        renderMarketplace();
+    });
+
+    buyPackButton.addEventListener("click", () => {
+        buySelectedPack();
+    });
+
+    clearPackButton.addEventListener("click", () => {
+        clearCurrentPack();
+    });
+
+    packStackWindow.addEventListener("click", () => {
+        revealNextCard();
+    });
+
+    packStackWindow.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            revealNextCard();
+        }
+    });
+
+    packRipTop.addEventListener("pointerdown", (event) => {
+        if (!state.currentPack || state.currentPack.ripped) {
+            return;
+        }
+
+        state.drag.active = true;
+        state.drag.pointerId = event.pointerId;
+        state.drag.startX = event.clientX;
+        packRipTop.setPointerCapture(event.pointerId);
+        event.preventDefault();
+    });
+
+    packRipTop.addEventListener("pointermove", (event) => {
+        if (!state.drag.active || event.pointerId !== state.drag.pointerId) {
+            return;
+        }
+
+        const delta = event.clientX - state.drag.startX;
+        setRipProgress(delta / 140);
+    });
+
+    const finishRipInteraction = (event) => {
+        if (!state.drag.active || event.pointerId !== state.drag.pointerId) {
+            return;
+        }
+
+        if (state.drag.progress >= 0.55 && state.currentPack && !state.currentPack.ripped) {
+            state.currentPack.ripped = true;
+            packProduct.classList.add("is-opened");
+            packProduct.style.setProperty("--rip-progress", "1");
+        } else {
+            setRipProgress(0);
+        }
+
+        state.drag.active = false;
+        state.drag.pointerId = null;
+        renderMarketplace();
+    };
+
+    packRipTop.addEventListener("pointerup", finishRipInteraction);
+    packRipTop.addEventListener("pointercancel", finishRipInteraction);
+
+    renderMarketplace();
+    bindMarketTilt(revealedCards);
 })();

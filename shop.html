@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CARDs 2.0 — Marketplace</title>
+  <meta
+    name="description"
+    content="CARDs 2.0 Marketplace — buy packs, tear them open, and reveal your pulls."
+  />
+  <meta name="theme-color" content="#080808" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <script defer src="assets/js/app.js"></script>
+</head>
+<body data-page="shop">
+  <div class="ambient ambient-stripes" aria-hidden="true"></div>
+  <div class="ambient ambient-vignette" aria-hidden="true"></div>
+
+  <div class="cursor" aria-hidden="true">
+    <span class="cursor-orb"></span>
+    <span class="cursor-shape"></span>
+  </div>
+
+  <header class="site-header">
+    <div class="container">
+      <nav class="nav-pill luxury-panel" aria-label="Primary navigation">
+        <a href="index.html" class="brand" aria-label="CARDs 2.0 Home">
+          <span class="brand-word">CARDs</span>
+          <span class="brand-version">2.0</span>
+        </a>
+
+        <div class="nav-links">
+          <a href="index.html" class="nav-link">Home</a>
+          <a href="gallery.html" class="nav-link">Index</a>
+          <a href="shop.html" class="nav-link">Marketplace</a>
+          <a href="arena.html" class="nav-link">Arena</a>
+          <a href="account.html" class="nav-link">Account</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section container reveal">
+      <div class="market-head">
+        <p class="section-kicker">Marketplace</p>
+        <h1 class="market-title">Packs & Pulls</h1>
+        <p class="section-copy market-copy">
+          Buy sealed packs, tear them open, and reveal your cards one by one. This is front-end only for now,
+          but your preview gold and unlocked cards are saved locally on this device.
+        </p>
+      </div>
+
+      <section class="market-wallet luxury-panel" aria-label="Current gold balance">
+        <div class="market-wallet-copy">
+          <span class="market-wallet-label">Current Gold</span>
+          <strong class="market-wallet-value" id="marketGoldValue">920</strong>
+        </div>
+
+        <p class="market-wallet-note">
+          Temporary local preview balance. No backend is connected yet.
+        </p>
+      </section>
+
+      <div class="market-layout">
+        <aside class="market-sidebar luxury-panel" aria-labelledby="marketSidebarTitle">
+          <h2 class="market-panel-title" id="marketSidebarTitle">Pack Selection</h2>
+
+          <div class="market-pack-list" id="marketPackList">
+            <button type="button" class="market-pack-option is-active" data-pack-option="standard">
+              <span class="market-pack-option-name">Standard Pack</span>
+              <span class="market-pack-option-meta">4 cards · common-heavy spread</span>
+              <span class="market-pack-option-price">120 Gold</span>
+            </button>
+
+            <button type="button" class="market-pack-option" data-pack-option="epic">
+              <span class="market-pack-option-name">Epic Pack</span>
+              <span class="market-pack-option-meta">5 cards · premium odds</span>
+              <span class="market-pack-option-price">260 Gold</span>
+            </button>
+          </div>
+
+          <p class="market-sidebar-note" id="marketSidebarNote">
+            More products can be added here later without changing the overall layout.
+          </p>
+        </aside>
+
+        <section class="market-stage luxury-panel" aria-labelledby="marketStageTitle">
+          <div class="market-stage-head">
+            <div>
+              <p class="section-kicker">Selected Product</p>
+              <h2 class="market-stage-title" id="marketStageTitle">Standard Pack</h2>
+            </div>
+
+            <p class="market-stage-price" id="marketStagePrice">120 Gold</p>
+          </div>
+
+          <div class="pack-theater">
+            <div class="pack-scene" id="packScene">
+              <div class="pack-product is-standard" id="packProduct">
+                <button
+                  type="button"
+                  class="pack-rip-top"
+                  id="packRipTop"
+                  aria-label="Drag to tear open the top of the pack"
+                >
+                  <span class="pack-rip-top-text">Drag to tear</span>
+                </button>
+
+                <div class="pack-product-inner">
+                  <div class="pack-foil-lines" aria-hidden="true"></div>
+
+                  <div class="pack-branding">
+                    <span class="brand-word">CARDs</span>
+                    <span class="brand-version">2.0</span>
+                  </div>
+
+                  <p class="pack-kind" id="packKindText">Standard Pack</p>
+                  <p class="pack-subtitle" id="packSubtitleText">4 cards · common-heavy spread</p>
+
+                  <div class="pack-emblem" id="packEmblem" aria-hidden="true"></div>
+
+                  <button
+                    type="button"
+                    class="pack-stack-window"
+                    id="packStackWindow"
+                    aria-label="Reveal the next card from the pack"
+                  >
+                    <div class="pack-stack" id="packStack"></div>
+                  </button>
+                </div>
+              </div>
+
+              <div class="pack-floor-glow" aria-hidden="true"></div>
+            </div>
+
+            <p class="pack-guidance" id="packGuidance">
+              Buy a pack to begin. Then drag across the top seam to tear it open.
+            </p>
+          </div>
+
+          <div class="market-stage-actions">
+            <button type="button" class="market-buy-button" id="buyPackButton">
+              Buy Standard Pack — 120 Gold
+            </button>
+
+            <button type="button" class="market-secondary-button" id="clearPackButton" hidden>
+              Clear Current Pack
+            </button>
+          </div>
+        </section>
+
+        <aside class="market-detail luxury-panel" aria-labelledby="marketDetailTitle">
+          <h2 class="market-panel-title" id="marketDetailTitle">Pack Details</h2>
+
+          <div class="market-detail-grid">
+            <article class="market-detail-stat">
+              <span>Cards Inside</span>
+              <strong id="marketDetailCount">4</strong>
+            </article>
+
+            <article class="market-detail-stat">
+              <span>Focus</span>
+              <strong id="marketDetailFocus">Common-heavy</strong>
+            </article>
+
+            <article class="market-detail-stat">
+              <span>Best Hit</span>
+              <strong id="marketDetailBest">Legendary chance</strong>
+            </article>
+
+            <article class="market-detail-stat">
+              <span>Price</span>
+              <strong id="marketDetailPrice">120 Gold</strong>
+            </article>
+          </div>
+
+          <p class="market-detail-copy" id="marketDetailCopy">
+            A steady entry pack built for broader collection growth and more common finds.
+          </p>
+
+          <div class="market-pull-status" id="marketPullStatus">
+            No active pack yet.
+          </div>
+        </aside>
+      </div>
+
+      <section class="opened-pack-panel luxury-panel" aria-labelledby="openedPackTitle">
+        <div class="opened-pack-head">
+          <div>
+            <p class="section-kicker">Current Pulls</p>
+            <h2 class="opened-pack-title" id="openedPackTitle">Revealed Cards</h2>
+          </div>
+
+          <p class="opened-pack-meta" id="openedPackMeta">
+            Buy and open a pack to start revealing cards.
+          </p>
+        </div>
+
+        <div class="opened-cards-grid" id="revealedCards" aria-live="polite"></div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="site-footer container">
+    <p class="muted">
+      © 2026 CARDs 2.0 — Website by Anirudh Gupta. Cards by Lakshya Singh.
+      <a href="https://github.com/AnAnonymousPotato" target="_blank" rel="noopener noreferrer">GitHub Profile</a>
+      ·
+      <a href="https://github.com/CARDs-2-0/CARDs-2-0.github.io" target="_blank" rel="noopener noreferrer">Repository</a>
+    </p>
+  </footer>
+</body>
+</html>
