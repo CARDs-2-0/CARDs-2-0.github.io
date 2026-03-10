@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CARDs 2.0 — Account</title>
+  <meta
+    name="description"
+    content="CARDs 2.0 Account — membership card, profile controls, achievements, and settings."
+  />
+  <meta name="theme-color" content="#080808" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=Orbitron:wght@400;700;900&family=JetBrains+Mono&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <script defer src="assets/js/app.js"></script>
+</head>
+<body data-page="account">
+  <div class="ambient ambient-stripes" aria-hidden="true"></div>
+  <div class="ambient ambient-vignette" aria-hidden="true"></div>
+
+  <div class="cursor" aria-hidden="true">
+    <span class="cursor-orb"></span>
+    <span class="cursor-shape"></span>
+  </div>
+
+  <header class="site-header">
+    <div class="container">
+      <nav class="nav-pill luxury-panel" aria-label="Primary navigation">
+        <a href="index.html" class="brand" aria-label="CARDs 2.0 Home">
+          <span class="brand-word">CARDs</span>
+          <span class="brand-version">2.0</span>
+        </a>
+
+        <div class="nav-links">
+          <a href="index.html" class="nav-link">Home</a>
+          <a href="gallery.html" class="nav-link">Index</a>
+          <a href="shop.html" class="nav-link">Marketplace</a>
+          <a href="arena.html" class="nav-link">Arena</a>
+          <a href="account.html" class="nav-link">Account</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section container reveal">
+      <div class="account-head">
+        <p class="section-kicker">Account</p>
+        <h1 class="account-title">Membership Vault</h1>
+        <p class="section-copy account-copy">
+          A premium member card, editable profile placeholders, and locally saved preview data until backend accounts arrive later.
+        </p>
+      </div>
+
+      <div class="account-layout">
+        <section class="account-membership-column">
+          <div class="account-card-block">
+            <div class="cc-scene" id="scene">
+              <div class="cc-card" id="card" tabindex="0" role="button" aria-label="Flip membership card">
+                <!-- FRONT -->
+                <div class="cc-face cc-face--front">
+                  <div class="shine" id="shineFront"></div>
+
+                  <div class="cc-front-content">
+                    <div class="cc-card-header">
+                      <div class="cc-card-brand">
+                        <span class="brand-word">CARDs</span>
+                        <span class="brand-version">2.0</span>
+                      </div>
+                      <div class="cc-card-tier">VAULT</div>
+                    </div>
+
+                    <div class="cc-chip-row">
+                      <div class="chip">
+                        <div class="chip-inner"></div>
+                        <div class="chip-holo" id="chipHolo"></div>
+                        <div class="chip-holo-grating" id="chipGrating"></div>
+                        <div class="chip-holo-iridescent" id="chipIridescent"></div>
+                        <div class="chip-holo-specular" id="chipSpecular"></div>
+                      </div>
+
+                      <div class="cc-contactless" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                          <path d="M12 18c3.3 0 6-2.7 6-6s-2.7-6-6-6" stroke-linecap="round"></path>
+                          <path d="M12 14c1.1 0 2-0.9 2-2s-0.9-2-2-2" stroke-linecap="round"></path>
+                          <path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2" stroke-linecap="round"></path>
+                        </svg>
+                      </div>
+                    </div>
+
+                    <div class="cc-profile-row">
+                      <div class="cc-profile-copy">
+                        <span class="cc-card-label">Member Name</span>
+                        <h2 id="accountNameFront">A. Collector</h2>
+                        <p id="accountTitleFront">Season Zero Member</p>
+                      </div>
+
+                      <div class="cc-profile-pic">
+                        <span id="accountInitials">AC</span>
+                      </div>
+                    </div>
+
+                    <div class="cc-card-number" id="accountCardNumber">4829 •••• •••• 7156</div>
+
+                    <div class="cc-card-footer">
+                      <div class="cc-card-info-group">
+                        <span class="cc-card-label">Member Since</span>
+                        <span class="cc-card-value" id="accountMemberSince">MAR 2026</span>
+                      </div>
+
+                      <div class="cc-card-info-group" style="text-align:center;">
+                        <span class="cc-card-label">Level</span>
+                        <span class="cc-card-value" id="accountLevelFront">12</span>
+                      </div>
+
+                      <div class="cc-card-info-group" style="text-align:right;">
+                        <span class="cc-card-label">Vault ID</span>
+                        <span class="cc-card-value" id="accountVaultIdFront">C2-2046</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- BACK -->
+                <div class="cc-face cc-face--back">
+                  <div class="shine" id="shineBack"></div>
+                  <div class="cc-magnetic-strip"></div>
+
+                  <div class="cc-back-content">
+                    <div class="cc-back-top">
+                      <div class="cc-back-top-item">
+                        <span class="cc-back-label">XP Progress</span>
+                        <span class="cc-back-value">
+                          <strong id="accountXpCurrent">1840</strong> / <span id="accountXpNext">2500</span>
+                        </span>
+                      </div>
+
+                      <div class="cc-back-top-item" style="text-align:right;">
+                        <span class="cc-back-label">Win %</span>
+                        <span class="cc-back-value" id="accountWinRate">64.2%</span>
+                      </div>
+                    </div>
+
+                    <div class="cc-xp-track">
+                      <span class="cc-xp-fill" id="accountXpFill"></span>
+                    </div>
+
+                    <div class="cc-back-stats-grid">
+                      <article class="cc-back-stat">
+                        <span class="cc-back-label">Level</span>
+                        <strong id="accountLevelBack">12</strong>
+                      </article>
+
+                      <article class="cc-back-stat">
+                        <span class="cc-back-label">Wins</span>
+                        <strong id="accountWins">34</strong>
+                      </article>
+
+                      <article class="cc-back-stat">
+                        <span class="cc-back-label">Losses</span>
+                        <strong id="accountLosses">19</strong>
+                      </article>
+
+                      <article class="cc-back-stat">
+                        <span class="cc-back-label">Ratio</span>
+                        <strong id="accountRatio">1.79:1</strong>
+                      </article>
+
+                      <article class="cc-back-stat">
+                        <span class="cc-back-label">Matches</span>
+                        <strong id="accountMatches">53</strong>
+                      </article>
+
+                      <article class="cc-back-stat">
+                        <span class="cc-back-label">Unlocked</span>
+                        <strong id="accountUnlockedTotal">5</strong>
+                      </article>
+                    </div>
+
+                    <div class="cc-back-footer">
+                      <div class="cc-back-footer-copy">
+                        <span class="cc-back-label">Member Since</span>
+                        <span class="cc-back-value" id="accountMemberSinceBack">MAR 2026</span>
+                      </div>
+
+                      <div class="cc-back-footer-copy" style="text-align:right;">
+                        <span class="cc-back-label">Vault ID</span>
+                        <span class="cc-back-value" id="accountVaultIdBack">C2-2046</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="cc-hint" id="hint">
+              <span class="cc-hint-icon">↻</span>
+              Click to flip the card
+            </div>
+          </div>
+
+          <div class="account-mini-grid">
+            <article class="account-mini-card luxury-panel">
+              <span>Gold</span>
+              <strong id="accountGoldStat">10000</strong>
+            </article>
+
+            <article class="account-mini-card luxury-panel">
+              <span>Cards Unlocked</span>
+              <strong id="accountUnlockedStat">5</strong>
+            </article>
+
+            <article class="account-mini-card luxury-panel">
+              <span>Win Rate</span>
+              <strong id="accountWinRateStat">64.2%</strong>
+            </article>
+          </div>
+        </section>
+
+        <section class="account-console luxury-panel">
+          <div class="account-console-top">
+            <div class="account-tabs" role="tablist" aria-label="Account sections">
+              <button type="button" class="account-tab is-active" data-account-tab="edit" aria-selected="true">Edit Profile</button>
+              <button type="button" class="account-tab" data-account-tab="settings" aria-selected="false">Settings</button>
+            </div>
+
+            <button type="button" class="account-achievements-button" id="openAchievementsButton">
+              View Achievements
+            </button>
+          </div>
+
+          <div class="account-panels">
+            <section class="account-panel is-active" data-account-panel="edit">
+              <div class="account-panel-head">
+                <h2>Edit Profile</h2>
+                <p>Placeholder profile controls saved locally for now.</p>
+              </div>
+
+              <form class="account-form" id="accountProfileForm">
+                <label class="account-field">
+                  <span>Display Name</span>
+                  <input id="accountNameInput" class="account-input" type="text" maxlength="26" />
+                </label>
+
+                <label class="account-field">
+                  <span>Title</span>
+                  <input id="accountTitleInput" class="account-input" type="text" maxlength="36" />
+                </label>
+
+                <label class="account-field">
+                  <span>Member Since</span>
+                  <input id="accountSinceInput" class="account-input" type="text" maxlength="18" />
+                </label>
+
+                <p class="account-status" id="accountProfileStatus" aria-live="polite"></p>
+
+                <button type="submit" class="account-action-button">Save Local Profile</button>
+              </form>
+            </section>
+
+            <section class="account-panel" data-account-panel="settings" hidden>
+              <div class="account-panel-head">
+                <h2>Settings</h2>
+                <p>Cosmetic preview preferences only. These are not account synced yet.</p>
+              </div>
+
+              <div class="settings-list">
+                <article class="setting-item">
+                  <div class="setting-copy">
+                    <h3>Motion Effects</h3>
+                    <p>Keep premium movement and transitions enabled in this preview.</p>
+                  </div>
+                  <button type="button" class="setting-toggle" data-setting-key="motion">
+                    <span></span>
+                  </button>
+                </article>
+
+                <article class="setting-item">
+                  <div class="setting-copy">
+                    <h3>Premium Highlights</h3>
+                    <p>Use richer glow, foil, and presentation accents where supported.</p>
+                  </div>
+                  <button type="button" class="setting-toggle" data-setting-key="premium">
+                    <span></span>
+                  </button>
+                </article>
+
+                <article class="setting-item">
+                  <div class="setting-copy">
+                    <h3>Preview Alerts</h3>
+                    <p>Reserve space for future update and social notifications.</p>
+                  </div>
+                  <button type="button" class="setting-toggle" data-setting-key="alerts">
+                    <span></span>
+                  </button>
+                </article>
+              </div>
+
+              <p class="account-status" id="accountSettingsStatus" aria-live="polite"></p>
+            </section>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <div class="account-modal" id="achievementsModal" hidden>
+    <div class="account-modal-backdrop" data-close-achievements></div>
+
+    <div
+      class="account-modal-dialog luxury-panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="achievementsModalTitle"
+    >
+      <button
+        type="button"
+        class="account-modal-close"
+        data-close-achievements
+        aria-label="Close achievements popup"
+      >
+        ×
+      </button>
+
+      <div class="account-panel-head">
+        <p class="section-kicker">Achievements</p>
+        <h2 id="achievementsModalTitle">Milestones & Progress</h2>
+        <p>Preview milestone cards based on your current local data.</p>
+      </div>
+
+      <div class="achievement-list achievement-list-large" id="achievementList"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer container">
+    <p class="muted">
+      © 2026 CARDs 2.0 — Website by Anirudh Gupta. Cards by Lakshya Singh.
+      <a href="https://github.com/AnAnonymousPotato" target="_blank" rel="noopener noreferrer">GitHub Profile</a>
+      ·
+      <a href="https://github.com/CARDs-2-0/CARDs-2-0.github.io" target="_blank" rel="noopener noreferrer">Repository</a>
+    </p>
+  </footer>
+</body>
+</html>

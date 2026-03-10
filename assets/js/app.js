@@ -82,6 +82,8 @@
         "button",
         "[data-tilt-scene]",
         "[data-reveal-card]",
+        ".pack3d-viewport",
+        ".pack3d-viewport canvas",
         ".nav-pill",
         ".news-modal-close",
         ".star-label"
@@ -89,7 +91,9 @@
 
     const orbHideSelector = [
         "[data-tilt-scene]",
-        "[data-reveal-card]"
+        "[data-reveal-card]",
+        ".pack3d-viewport",
+        ".pack3d-viewport canvas"
     ].join(", ");
 
     let targetX = window.innerWidth / 2;
@@ -1475,937 +1479,504 @@
 })();
 
 (() => {
-    if (document.body.dataset.page !== "shop") {
+    if (document.body.dataset.page !== "account") {
         return;
     }
 
-    const STORAGE_GOLD = "cards20-gold";
-    const STORAGE_UNLOCKED = "cards20-unlocked";
+    const PROFILE_KEY = "cards20-profile";
+    const SETTINGS_KEY = "cards20-account-settings";
 
-    const DEFAULT_GOLD = 920;
-    const DEFAULT_UNLOCKED = [
-        "skeleton",
-        "anaconda",
-        "dragon",
-        "narwhal",
-        "secret1"
-    ];
+    const scene = document.getElementById("scene");
+    const card = document.getElementById("card");
+    const shineFront = document.getElementById("shineFront");
+    const shineBack = document.getElementById("shineBack");
+    const chipHolo = document.getElementById("chipHolo");
+    const chipGrating = document.getElementById("chipGrating");
+    const chipIridescent = document.getElementById("chipIridescent");
+    const chipSpecular = document.getElementById("chipSpecular");
+    const hint = document.getElementById("hint");
 
-    const cardPool = [
-        {
-            id: "skeleton",
-            name: "Skeleton",
-            image: "assets/images/cards/Skeleton.jpg",
-            number: "1/45",
-            setNumber: 1,
-            type: "Grass",
-            rarity: "Common",
-            hp: 250,
-            dmg: 250
-        },
-        {
-            id: "anaconda",
-            name: "Anaconda",
-            image: "assets/images/cards/Anaconda.jpg",
-            number: "7/45",
-            setNumber: 7,
-            type: "Grass",
-            rarity: "Legendary",
-            hp: 350,
-            dmg: 300
-        },
-        {
-            id: "dragon",
-            name: "Dragon",
-            image: "assets/images/cards/Dragon.jpg",
-            number: "8/45",
-            setNumber: 8,
-            type: "Fire",
-            rarity: "Common",
-            hp: 150,
-            dmg: 300
-        },
-        {
-            id: "kirin",
-            name: "Kirin",
-            image: "assets/images/cards/Kirin.jpg",
-            number: "9/45",
-            setNumber: 9,
-            type: "Fire",
-            rarity: "Common",
-            hp: 180,
-            dmg: 290
-        },
-        {
-            id: "cracken",
-            name: "Cracken",
-            image: "assets/images/cards/Cracken.jpg",
-            number: "15/45",
-            setNumber: 15,
-            type: "Water",
-            rarity: "Common",
-            hp: 220,
-            dmg: 280
-        },
-        {
-            id: "penguin",
-            name: "Penguin",
-            image: "assets/images/cards/Penguin.jpg",
-            number: "16/45",
-            setNumber: 16,
-            type: "Water",
-            rarity: "Common",
-            hp: 270,
-            dmg: 230
-        },
-        {
-            id: "bird",
-            name: "Bird",
-            image: "assets/images/cards/Bird.jpg",
-            number: "22/45",
-            setNumber: 22,
-            type: "Air",
-            rarity: "Common",
-            hp: 275,
-            dmg: 225
-        },
-        {
-            id: "owl",
-            name: "Owl",
-            image: "assets/images/cards/Owl.jpg",
-            number: "29/45",
-            setNumber: 29,
-            type: "Phantom",
-            rarity: "Common",
-            hp: 210,
-            dmg: 260
-        },
-        {
-            id: "golem",
-            name: "Golem",
-            image: "assets/images/cards/Golem.jpg",
-            number: "36/45",
-            setNumber: 36,
-            type: "Magic",
-            rarity: "Common",
-            hp: 300,
-            dmg: 210
-        },
-        {
-            id: "narwhal",
-            name: "Narwhal",
-            image: "assets/images/cards/Narwhal.jpg",
-            number: "43/45",
-            setNumber: 43,
-            type: "Plasma",
-            rarity: "Epic",
-            hp: 250,
-            dmg: 325
-        },
-        {
-            id: "secret1",
-            name: "Secret Prototype",
-            image: "assets/images/cards/Secret1.jpg",
-            number: "46/45",
-            setNumber: 46,
-            type: "Unknown",
-            rarity: "Secret",
-            hp: 360,
-            dmg: 360
-        }
-    ];
+    const accountTabs = document.querySelectorAll("[data-account-tab]");
+    const accountPanels = document.querySelectorAll("[data-account-panel]");
 
-    const packConfigs = {
-        standard: {
-            id: "standard",
-            name: "Standard Pack",
-            cost: 120,
-            cards: 4,
-            focus: "Common-heavy",
-            best: "Legendary chance",
-            subtitle: "4 cards · common-heavy spread",
-            description:
-            "A steadier entry pack aimed at broad collection growth. It mostly produces commons, but stronger hits can still break through."
-        },
-        epic: {
-            id: "epic",
-            name: "Epic Pack",
-            cost: 260,
-            cards: 5,
-            focus: "Premium odds",
-            best: "Epic or better",
-            subtitle: "5 cards · premium odds",
-            description:
-            "A stronger pack with a more exciting ceiling. It leans toward better outcomes and gives a much better shot at premium pulls."
-        }
-    };
+    const openAchievementsButton = document.getElementById("openAchievementsButton");
+    const achievementsModal = document.getElementById("achievementsModal");
+    const achievementList = document.getElementById("achievementList");
 
-    const goldValue = document.getElementById("marketGoldValue");
-    const packList = document.getElementById("marketPackList");
-    const sidebarNote = document.getElementById("marketSidebarNote");
-    const stageTitle = document.getElementById("marketStageTitle");
-    const stagePrice = document.getElementById("marketStagePrice");
-    const packProduct = document.getElementById("packProduct");
-    const packRipTop = document.getElementById("packRipTop");
-    const packKindText = document.getElementById("packKindText");
-    const packSubtitleText = document.getElementById("packSubtitleText");
-    const packGuidance = document.getElementById("packGuidance");
-    const packStackWindow = document.getElementById("packStackWindow");
-    const packStack = document.getElementById("packStack");
-    const buyPackButton = document.getElementById("buyPackButton");
-    const clearPackButton = document.getElementById("clearPackButton");
-    const detailCount = document.getElementById("marketDetailCount");
-    const detailFocus = document.getElementById("marketDetailFocus");
-    const detailBest = document.getElementById("marketDetailBest");
-    const detailPrice = document.getElementById("marketDetailPrice");
-    const detailCopy = document.getElementById("marketDetailCopy");
-    const pullStatus = document.getElementById("marketPullStatus");
-    const openedPackMeta = document.getElementById("openedPackMeta");
-    const revealedCards = document.getElementById("revealedCards");
+    const nameFront = document.getElementById("accountNameFront");
+    const titleFront = document.getElementById("accountTitleFront");
+    const memberSince = document.getElementById("accountMemberSince");
+    const levelFront = document.getElementById("accountLevelFront");
+    const cardNumber = document.getElementById("accountCardNumber");
+    const vaultIdFront = document.getElementById("accountVaultIdFront");
+
+    const xpCurrent = document.getElementById("accountXpCurrent");
+    const xpNext = document.getElementById("accountXpNext");
+    const xpFill = document.getElementById("accountXpFill");
+    const wins = document.getElementById("accountWins");
+    const losses = document.getElementById("accountLosses");
+    const ratio = document.getElementById("accountRatio");
+    const winRate = document.getElementById("accountWinRate");
+    const matches = document.getElementById("accountMatches");
+    const unlockedTotal = document.getElementById("accountUnlockedTotal");
+    const memberSinceBack = document.getElementById("accountMemberSinceBack");
+    const levelBack = document.getElementById("accountLevelBack");
+    const vaultIdBack = document.getElementById("accountVaultIdBack");
+
+    const goldStat = document.getElementById("accountGoldStat");
+    const unlockedStat = document.getElementById("accountUnlockedStat");
+    const winRateStat = document.getElementById("accountWinRateStat");
+
+    const form = document.getElementById("accountProfileForm");
+    const nameInput = document.getElementById("accountNameInput");
+    const titleInput = document.getElementById("accountTitleInput");
+    const sinceInput = document.getElementById("accountSinceInput");
+    const profileStatus = document.getElementById("accountProfileStatus");
+
+    const settingsButtons = document.querySelectorAll("[data-setting-key]");
+    const settingsStatus = document.getElementById("accountSettingsStatus");
 
     if (
-        !goldValue ||
-        !packList ||
-        !sidebarNote ||
-        !stageTitle ||
-        !stagePrice ||
-        !packProduct ||
-        !packRipTop ||
-        !packKindText ||
-        !packSubtitleText ||
-        !packGuidance ||
-        !packStackWindow ||
-        !packStack ||
-        !buyPackButton ||
-        !clearPackButton ||
-        !detailCount ||
-        !detailFocus ||
-        !detailBest ||
-        !detailPrice ||
-        !detailCopy ||
-        !pullStatus ||
-        !openedPackMeta ||
-        !revealedCards
+        !scene ||
+        !card ||
+        !shineFront ||
+        !shineBack ||
+        !chipHolo ||
+        !chipGrating ||
+        !chipIridescent ||
+        !chipSpecular ||
+        !hint ||
+        !openAchievementsButton ||
+        !achievementsModal ||
+        !achievementList ||
+        !nameFront ||
+        !titleFront ||
+        !memberSince ||
+        !levelFront ||
+        !cardNumber ||
+        !vaultIdFront ||
+        !xpCurrent ||
+        !xpNext ||
+        !xpFill ||
+        !wins ||
+        !losses ||
+        !ratio ||
+        !winRate ||
+        !matches ||
+        !unlockedTotal ||
+        !memberSinceBack ||
+        !levelBack ||
+        !vaultIdBack ||
+        !goldStat ||
+        !unlockedStat ||
+        !winRateStat ||
+        !form ||
+        !nameInput ||
+        !titleInput ||
+        !sinceInput ||
+        !profileStatus ||
+        !settingsStatus
     ) {
         return;
     }
 
-    const state = {
-        gold: loadGold(),
- unlocked: loadUnlocked(),
- selectedPack: "standard",
- currentPack: null,
- drag: {
-     active: false,
-     pointerId: null,
-     startX: 0,
-     progress: 0
- }
+    const generateReadableCardNumber = () => {
+        const groups = Array.from({ length: 4 }, () =>
+        String(Math.floor(1000 + Math.random() * 9000))
+        );
+        return `${groups[0]} •••• •••• ${groups[3]}`;
     };
 
-    function loadGold() {
-        const parsed = Number(localStorage.getItem(STORAGE_GOLD));
-        if (Number.isFinite(parsed) && parsed >= 0) {
-            return Math.floor(parsed);
-        }
+    const generateVaultId = (numberString) => {
+        const digits = numberString.replace(/\D/g, "");
+        return `C2-${digits.slice(-4)}`;
+    };
 
-        localStorage.setItem(STORAGE_GOLD, String(DEFAULT_GOLD));
-        return DEFAULT_GOLD;
-    }
+    const defaultProfile = {
+        name: "A. Collector",
+        title: "Season Zero Member",
+        memberSince: "MAR 2026",
+        level: 12,
+        xpCurrent: 1840,
+        xpNext: 2500,
+        wins: 34,
+        losses: 19,
+        cardNumber: generateReadableCardNumber()
+    };
 
-    function saveGold(value) {
-        state.gold = Math.max(0, Math.floor(value));
-        localStorage.setItem(STORAGE_GOLD, String(state.gold));
-    }
+    const defaultSettings = {
+        motion: true,
+        premium: true,
+        alerts: false
+    };
 
-    function loadUnlocked() {
+    const loadJson = (key, fallback) => {
         try {
-            const parsed = JSON.parse(localStorage.getItem(STORAGE_UNLOCKED) || "null");
-            if (Array.isArray(parsed) && parsed.length) {
-                return new Set(parsed);
+            const parsed = JSON.parse(localStorage.getItem(key) || "null");
+            if (parsed && typeof parsed === "object") {
+                return { ...fallback, ...parsed };
             }
         } catch (error) {
             //
         }
+        return { ...fallback };
+    };
 
-        localStorage.setItem(STORAGE_UNLOCKED, JSON.stringify(DEFAULT_UNLOCKED));
-        return new Set(DEFAULT_UNLOCKED);
-    }
+    const saveJson = (key, value) => {
+        localStorage.setItem(key, JSON.stringify(value));
+    };
 
-    function saveUnlocked() {
-        localStorage.setItem(STORAGE_UNLOCKED, JSON.stringify(Array.from(state.unlocked)));
-    }
+    const state = {
+        profile: loadJson(PROFILE_KEY, defaultProfile),
+ settings: loadJson(SETTINGS_KEY, defaultSettings),
+ isFlipped: false,
+ isAnimating: false,
+ isHovering: false,
+ targetTiltX: 0,
+ targetTiltY: 0,
+ currentTiltX: 0,
+ currentTiltY: 0
+    };
 
-    function getSelectedConfig() {
-        return packConfigs[state.selectedPack];
-    }
-
-    function randomFrom(list) {
-        return list[Math.floor(Math.random() * list.length)];
-    }
-
-    function shuffle(list) {
-        const copy = [...list];
-        for (let index = copy.length - 1; index > 0; index -= 1) {
-            const swapIndex = Math.floor(Math.random() * (index + 1));
-            [copy[index], copy[swapIndex]] = [copy[swapIndex], copy[index]];
-        }
-        return copy;
-    }
-
-    function uniquePick(pool, excluded) {
-        const available = pool.filter((card) => !excluded.has(card.id));
-        const source = available.length ? available : pool;
-        const card = randomFrom(source);
-        excluded.add(card.id);
-        return card;
-    }
-
-    function pickWeightedRarity(weights) {
-        const total = weights.reduce((sum, entry) => sum + entry.weight, 0);
-        let roll = Math.random() * total;
-
-        for (const entry of weights) {
-            roll -= entry.weight;
-            if (roll <= 0) {
-                return entry.rarity;
+    const getUnlockedIds = () => {
+        try {
+            const parsed = JSON.parse(localStorage.getItem("cards20-unlocked") || "null");
+            if (Array.isArray(parsed)) {
+                return parsed;
             }
+        } catch (error) {
+            //
         }
+        return ["skeleton", "anaconda", "dragon", "narwhal", "secret1"];
+    };
 
-        return weights[weights.length - 1].rarity;
-    }
+    const getGold = () => {
+        const parsed = Number(localStorage.getItem("cards20-gold"));
+        return Number.isFinite(parsed) ? Math.floor(parsed) : 10000;
+    };
 
-    function poolByRarity(rarity) {
-        return cardPool.filter((card) => card.rarity === rarity);
-    }
+    const renderAchievements = (unlockedIds, totalMatches, winRateValue) => {
+        const hasSecret = unlockedIds.includes("secret1");
+        const hasLegendary = unlockedIds.includes("anaconda");
 
-    function pullByRarity(rarityList, excluded) {
-        const pool = cardPool.filter((card) => rarityList.includes(card.rarity) && !excluded.has(card.id));
-
-        if (pool.length) {
-            return uniquePick(pool, excluded);
-        }
-
-        return uniquePick(cardPool, excluded);
-    }
-
-    function generateStandardPack() {
-        const excluded = new Set();
-        const commons = poolByRarity("Common");
-        const pulls = [
-            uniquePick(commons, excluded),
- uniquePick(commons, excluded),
- uniquePick(commons, excluded)
+        const achievements = [
+            {
+                title: "First Legendary",
+                description: "Unlocked a Legendary card in the preview collection.",
+                unlocked: hasLegendary
+            },
+            {
+                title: "Secret Finder",
+                description: "Discovered at least one secret card.",
+                unlocked: hasSecret
+            },
+            {
+                title: "Collection Rising",
+                description: "Unlocked five or more cards.",
+                unlocked: unlockedIds.length >= 5
+            },
+            {
+                title: "Arena Warmup",
+                description: "Played at least twenty matches in the placeholder profile.",
+                unlocked: totalMatches >= 20
+            },
+            {
+                title: "Winning Form",
+                description: "Hold a win rate above sixty percent.",
+                unlocked: winRateValue >= 60
+            }
         ];
 
-        const bonusRarity = pickWeightedRarity([
-            { rarity: "Common", weight: 70 },
-            { rarity: "Epic", weight: 18 },
-            { rarity: "Legendary", weight: 9 },
-            { rarity: "Secret", weight: 3 }
-        ]);
+        achievementList.innerHTML = achievements
+        .map(
+            (achievement) => `
+            <article class="achievement-item">
+            <div class="achievement-item-head">
+            <h3>${achievement.title}</h3>
+            <span class="achievement-badge ${achievement.unlocked ? "unlocked" : "locked"}">
+            ${achievement.unlocked ? "Unlocked" : "Locked"}
+            </span>
+            </div>
+            <p>${achievement.description}</p>
+            </article>
+            `
+        )
+        .join("");
+    };
 
-        pulls.push(pullByRarity([bonusRarity], excluded));
+    const renderProfile = () => {
+        const unlockedIds = getUnlockedIds();
+        const gold = getGold();
 
-        return shuffle(pulls);
-    }
+        const profile = state.profile;
+        const totalMatches = profile.wins + profile.losses;
+        const ratioValue = profile.losses === 0 ? profile.wins : profile.wins / profile.losses;
+        const winRateValue = totalMatches === 0 ? 0 : (profile.wins / totalMatches) * 100;
+        const vaultId = generateVaultId(profile.cardNumber);
+        const xpPercent = Math.max(
+            0,
+            Math.min(100, (profile.xpCurrent / profile.xpNext) * 100)
+        );
 
-    function generateEpicPack() {
-        const excluded = new Set();
-        const commons = poolByRarity("Common");
-        const pulls = [
-            uniquePick(commons, excluded),
- uniquePick(commons, excluded)
-        ];
+        nameFront.textContent = profile.name.toUpperCase();
+        titleFront.textContent = profile.title;
+        memberSince.textContent = profile.memberSince;
+        levelFront.textContent = String(profile.level);
+        cardNumber.textContent = profile.cardNumber;
+        vaultIdFront.textContent = vaultId;
 
-        const midRarity = pickWeightedRarity([
-            { rarity: "Common", weight: 54 },
-            { rarity: "Epic", weight: 28 },
-            { rarity: "Legendary", weight: 14 },
-            { rarity: "Secret", weight: 4 }
-        ]);
+        xpCurrent.textContent = String(profile.xpCurrent);
+        xpNext.textContent = String(profile.xpNext);
+        xpFill.style.width = `${xpPercent.toFixed(1)}%`;
+        wins.textContent = String(profile.wins);
+        losses.textContent = String(profile.losses);
+        ratio.textContent = `${ratioValue.toFixed(2)}:1`;
+        winRate.textContent = `${winRateValue.toFixed(1)}%`;
+        matches.textContent = String(totalMatches);
+        unlockedTotal.textContent = String(unlockedIds.length);
+        memberSinceBack.textContent = profile.memberSince;
+        levelBack.textContent = String(profile.level);
+        vaultIdBack.textContent = vaultId;
 
-        pulls.push(pullByRarity([midRarity], excluded));
+        goldStat.textContent = String(gold);
+        unlockedStat.textContent = String(unlockedIds.length);
+        winRateStat.textContent = `${winRateValue.toFixed(1)}%`;
 
-        const guaranteedPremium = pickWeightedRarity([
-            { rarity: "Epic", weight: 68 },
-            { rarity: "Legendary", weight: 25 },
-            { rarity: "Secret", weight: 7 }
-        ]);
+        nameInput.value = profile.name;
+        titleInput.value = profile.title;
+        sinceInput.value = profile.memberSince;
 
-        pulls.push(pullByRarity([guaranteedPremium], excluded));
+        renderAchievements(unlockedIds, totalMatches, winRateValue);
+    };
 
-        const bonusRarity = pickWeightedRarity([
-            { rarity: "Common", weight: 28 },
-            { rarity: "Epic", weight: 38 },
-            { rarity: "Legendary", weight: 24 },
-            { rarity: "Secret", weight: 10 }
-        ]);
-
-        pulls.push(pullByRarity([bonusRarity], excluded));
-
-        return shuffle(pulls);
-    }
-
-    function generatePack(packId) {
-        return packId === "epic" ? generateEpicPack() : generateStandardPack();
-    }
-
-    function setRipProgress(progress) {
-        const clamped = Math.max(0, Math.min(1, progress));
-        state.drag.progress = clamped;
-        packProduct.style.setProperty("--rip-progress", String(clamped));
-    }
-
-    function resetRipProgress() {
-        state.drag.active = false;
-        state.drag.pointerId = null;
-        state.drag.startX = 0;
-        setRipProgress(0);
-    }
-
-    function buySelectedPack() {
-        const config = getSelectedConfig();
-
-        if (state.currentPack && !state.currentPack.complete) {
-            return;
-        }
-
-        if (state.gold < config.cost) {
-            return;
-        }
-
-        saveGold(state.gold - config.cost);
-
-        const generated = generatePack(config.id).map((card) => ({
-            ...card,
-            isNewHit: !state.unlocked.has(card.id)
-        }));
-
-        state.currentPack = {
-            type: config.id,
-            ripped: false,
-            revealIndex: 0,
-            cards: generated,
-            revealed: [],
-            complete: false
-        };
-
-        packProduct.classList.remove("is-purchased");
-        void packProduct.offsetWidth;
-        packProduct.classList.add("is-purchased");
-
-        window.setTimeout(() => {
-            packProduct.classList.remove("is-purchased");
-        }, 700);
-
-        renderMarketplace();
-    }
-
-    function revealNextCard() {
-        if (!state.currentPack || !state.currentPack.ripped || state.currentPack.complete) {
-            return;
-        }
-
-        const next = state.currentPack.cards[state.currentPack.revealIndex];
-        if (!next) {
-            return;
-        }
-
-        state.currentPack.revealIndex += 1;
-        state.currentPack.revealed.push(next);
-
-        if (!state.unlocked.has(next.id)) {
-            state.unlocked.add(next.id);
-            saveUnlocked();
-        }
-
-        if (state.currentPack.revealIndex >= state.currentPack.cards.length) {
-            state.currentPack.complete = true;
-        }
-
-        renderMarketplace();
-        bindMarketTilt(revealedCards);
-    }
-
-    function clearCurrentPack() {
-        state.currentPack = null;
-        resetRipProgress();
-        renderMarketplace();
-    }
-
-    function formatRarityText(card) {
-        return `${card.rarity} · ${card.type}`;
-    }
-
-    function renderGold() {
-        goldValue.textContent = String(state.gold);
-    }
-
-    function renderPackButtons() {
-        const hasActiveUnfinishedPack = Boolean(state.currentPack && !state.currentPack.complete);
-
-        packList.querySelectorAll("[data-pack-option]").forEach((button) => {
+    const renderSettings = () => {
+        settingsButtons.forEach((button) => {
             if (!(button instanceof HTMLButtonElement)) {
                 return;
             }
 
-            const isSelected = button.dataset.packOption === state.selectedPack;
-            button.classList.toggle("is-active", isSelected);
-            button.disabled = hasActiveUnfinishedPack;
-        });
-    }
-
-    function renderDetails() {
-        const config = getSelectedConfig();
-
-        stageTitle.textContent = config.name;
-        stagePrice.textContent = `${config.cost} Gold`;
-
-        detailCount.textContent = String(config.cards);
-        detailFocus.textContent = config.focus;
-        detailBest.textContent = config.best;
-        detailPrice.textContent = `${config.cost} Gold`;
-        detailCopy.textContent = config.description;
-
-        sidebarNote.textContent = state.currentPack && !state.currentPack.complete
-        ? "Finish opening the current pack before switching products."
-        : "More products can be added here later without changing the overall layout.";
-    }
-
-    function renderPackShell() {
-        const activePack = state.currentPack;
-        const selectedConfig = getSelectedConfig();
-        const activeConfig = activePack ? packConfigs[activePack.type] : selectedConfig;
-
-        packProduct.className = `pack-product is-${activeConfig.id}`;
-
-        if (!activePack) {
-            packProduct.classList.add("is-preview");
-        } else if (!activePack.ripped) {
-            packProduct.classList.add("is-sealed");
-        } else {
-            packProduct.classList.add("is-opened");
-        }
-
-        packKindText.textContent = activeConfig.name;
-        packSubtitleText.textContent = activePack && activePack.ripped
-        ? `${activePack.cards.length - activePack.revealIndex} card${activePack.cards.length - activePack.revealIndex === 1 ? "" : "s"} left inside`
-        : activeConfig.subtitle;
-
-        packRipTop.hidden = !(activePack && !activePack.ripped);
-
-        if (!activePack) {
-            packGuidance.textContent = "Buy a pack to begin. Then drag across the top seam to tear it open.";
-        } else if (!activePack.ripped) {
-            packGuidance.textContent = "Drag the top seal to the right until the wrapper tears open.";
-        } else if (!activePack.complete) {
-            packGuidance.textContent = "Tap the opened stack to deal the next card onto the table.";
-        } else {
-            packGuidance.textContent = "Pack cleared. Buy another one or inspect your current pulls below.";
-        }
-
-        if (!activePack) {
-            pullStatus.textContent = "No active pack yet.";
-        } else if (!activePack.ripped) {
-            pullStatus.textContent = `${activeConfig.name} purchased. Tear the top strip to open it.`;
-        } else if (!activePack.complete) {
-            pullStatus.textContent = `${activePack.cards.length - activePack.revealIndex} card(s) still inside this pack.`;
-        } else {
-            pullStatus.textContent = `${activePack.cards.length} card(s) revealed from this ${activeConfig.name}.`;
-        }
-
-        if (!activePack) {
-            openedPackMeta.textContent = "Buy and open a pack to start revealing cards.";
-        } else if (!activePack.ripped) {
-            openedPackMeta.textContent = "Sealed pack ready. Tear it open first.";
-        } else if (!activePack.complete) {
-            openedPackMeta.textContent = `${activePack.revealIndex} of ${activePack.cards.length} cards revealed.`;
-        } else {
-            openedPackMeta.textContent = `Pack complete · ${activePack.cards.length} cards revealed.`;
-        }
-
-        renderPackStack();
-        updateActionButtons();
-    }
-
-    function renderPackStack() {
-        const activePack = state.currentPack;
-
-        if (!activePack) {
-            const previewCount = getSelectedConfig().cards;
-            packStackWindow.disabled = true;
-            packStackWindow.classList.remove("is-clickable");
-            packStack.innerHTML = createStackMarkup(previewCount, false);
-            return;
-        }
-
-        if (!activePack.ripped) {
-            packStackWindow.disabled = true;
-            packStackWindow.classList.remove("is-clickable");
-            packStack.innerHTML = createStackMarkup(activePack.cards.length, false);
-            return;
-        }
-
-        const remaining = activePack.cards.length - activePack.revealIndex;
-
-        if (remaining > 0) {
-            packStackWindow.disabled = false;
-            packStackWindow.classList.add("is-clickable");
-            packStack.innerHTML = createStackMarkup(remaining, true);
-        } else {
-            packStackWindow.disabled = true;
-            packStackWindow.classList.remove("is-clickable");
-            packStack.innerHTML = `<div class="pack-stack-empty">Empty</div>`;
-        }
-    }
-
-    function createStackMarkup(total, isOpen) {
-        const visibleLayers = Math.min(total, 4);
-        let markup = "";
-
-        for (let index = visibleLayers - 1; index >= 0; index -= 1) {
-            markup += `<div class="pack-stack-card" style="--stack-layer:${index};"></div>`;
-        }
-
-        markup += `<div class="pack-stack-count">${total} left</div>`;
-
-        if (!isOpen) {
-            markup += "";
-        }
-
-        return markup;
-    }
-
-    function updateActionButtons() {
-        const config = getSelectedConfig();
-        const activePack = state.currentPack;
-        const canAfford = state.gold >= config.cost;
-
-        clearPackButton.hidden = !activePack;
-
-        if (!activePack || activePack.complete) {
-            buyPackButton.disabled = !canAfford;
-            buyPackButton.textContent = canAfford
-            ? `Buy ${config.name} — ${config.cost} Gold`
-            : `Not Enough Gold — ${config.cost} Gold`;
-            return;
-        }
-
-        if (!activePack.ripped) {
-            buyPackButton.disabled = true;
-            buyPackButton.textContent = "Tear Open Current Pack";
-            return;
-        }
-
-        buyPackButton.disabled = true;
-        buyPackButton.textContent = "Reveal Cards From The Pack";
-    }
-
-    function renderRevealedCards() {
-        const activePack = state.currentPack;
-
-        if (!activePack || activePack.revealed.length === 0) {
-            revealedCards.innerHTML = `
-            <div class="opened-cards-empty">
-            Your revealed cards will appear here after you tear open a pack and start pulling from it.
-            </div>
-            `;
-            return;
-        }
-
-        revealedCards.innerHTML = activePack.revealed
-        .map((card, index) => {
-            const pullStatusText = card.isNewHit ? "New" : "Owned";
-            const pullStatusClass = card.isNewHit ? "new" : "owned";
-
-            return `
-            <article class="market-pull-card ${card.isNewHit ? "is-new-hit" : ""} ${index === activePack.revealed.length - 1 ? "just-dealt" : ""}">
-            <div class="market-pull-media tilt-scene" data-market-tilt data-tilt-max="10">
-            <div class="card-container">
-            <div class="card-face">
-            <img src="${card.image}" alt="${card.name} card" width="614" height="889" />
-            <span class="shine"></span>
-            </div>
-            </div>
-            </div>
-
-            <div class="market-pull-head">
-            <h3 class="market-pull-name">${card.name}</h3>
-            <span class="market-pull-flag ${pullStatusClass}">${pullStatusText}</span>
-            </div>
-
-            <div class="market-pull-meta">${formatRarityText(card)}</div>
-            <div class="market-pull-line">
-            <span>${card.number}</span>
-            <span>HP ${card.hp} / DMG ${card.dmg}</span>
-            </div>
-            </article>
-            `;
-        })
-        .join("");
-    }
-
-    function renderMarketplace() {
-        renderGold();
-        renderPackButtons();
-        renderDetails();
-        renderPackShell();
-        renderRevealedCards();
-    }
-
-    function bindMarketTilt(root) {
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-            return;
-        }
-
-        const scenes = root.querySelectorAll("[data-market-tilt]");
-        const hasFinePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-
-        scenes.forEach((scene) => {
-            if (scene.dataset.marketTiltBound === "true") {
+            const key = button.dataset.settingKey;
+            if (!key) {
                 return;
             }
 
-            scene.dataset.marketTiltBound = "true";
-            scene.style.display = "block";
-
-            const container = scene.querySelector(".card-container");
-            const card = scene.querySelector(".card-face");
-            const shine = scene.querySelector(".shine");
-
-            if (!container || !card || !shine) {
-                return;
-            }
-
-            container.style.display = "block";
-            card.style.display = "block";
-
-            let bounds;
-            let isActive = false;
-            let currentX = 0;
-            let currentY = 0;
-            let targetX = 0;
-            let targetY = 0;
-            let rafId = 0;
-
-            const maxTilt = Number(scene.getAttribute("data-tilt-max")) || 10;
-
-            const updatePoint = (clientX, clientY) => {
-                if (!bounds) {
-                    bounds = scene.getBoundingClientRect();
-                }
-
-                const x = clientX - bounds.left;
-                const y = clientY - bounds.top;
-
-                targetX = Math.max(-1, Math.min(1, (x / bounds.width) * 2 - 1));
-                targetY = Math.max(-1, Math.min(1, (y / bounds.height) * 2 - 1));
-            };
-
-            const render = () => {
-                if (!isActive) {
-                    return;
-                }
-
-                currentX += (targetX - currentX) * 0.1;
-                currentY += (targetY - currentY) * 0.1;
-
-                const rotateY = currentX * maxTilt;
-                const rotateX = currentY * -maxTilt;
-
-                container.style.transform =
-                `rotateY(${rotateY}deg) rotateX(${rotateX}deg) scale3d(1.03, 1.03, 1.03)`;
-
-                const mouseXPercent = ((currentX + 1) / 2) * 100;
-                const mouseYPercent = ((currentY + 1) / 2) * 100;
-
-                shine.style.setProperty("--mouse-x", `${mouseXPercent}%`);
-                shine.style.setProperty("--mouse-y", `${mouseYPercent}%`);
-
-                const shadowX = -rotateY * 0.6;
-                const shadowY = rotateX * 0.6;
-
-                card.style.boxShadow = `
-                ${shadowX}px ${shadowY + 20}px 60px rgba(0, 0, 0, 0.5),
-                       0 0 5px rgba(0, 0, 0, 0.4)
-                       `;
-
-                       rafId = requestAnimationFrame(render);
-            };
-
-            const start = (clientX, clientY) => {
-                bounds = scene.getBoundingClientRect();
-                isActive = true;
-                scene.classList.add("is-tilting");
-                shine.style.opacity = "1";
-                container.style.transition = "transform 0.08s ease-out";
-
-                if (typeof clientX === "number" && typeof clientY === "number") {
-                    updatePoint(clientX, clientY);
-                }
-
-                if (!rafId) {
-                    rafId = requestAnimationFrame(render);
-                }
-            };
-
-            const stop = () => {
-                isActive = false;
-                scene.classList.remove("is-tilting");
-                shine.style.opacity = "0";
-
-                if (rafId) {
-                    cancelAnimationFrame(rafId);
-                    rafId = 0;
-                }
-
-                container.style.transition = "transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)";
-                container.style.transform = "rotateY(0deg) rotateX(0deg) scale3d(1, 1, 1)";
-                card.style.boxShadow = `
-                0 0 5px rgba(0, 0, 0, 0.5),
-                       0 20px 60px rgba(0, 0, 0, 0.6)
-                       `;
-
-                       currentX = 0;
-                       currentY = 0;
-                       targetX = 0;
-                       targetY = 0;
-            };
-
-            if (hasFinePointer) {
-                scene.addEventListener("pointerenter", (event) => {
-                    if (event.pointerType === "touch") {
-                        return;
-                    }
-                    start(event.clientX, event.clientY);
-                });
-
-                scene.addEventListener("pointermove", (event) => {
-                    if (!isActive || event.pointerType === "touch") {
-                        return;
-                    }
-                    updatePoint(event.clientX, event.clientY);
-                });
-
-                scene.addEventListener("pointerleave", stop);
-            }
-
-            scene.addEventListener(
-                "touchstart",
-                (event) => {
-                    const touch = event.touches[0];
-                    if (!touch) {
-                        return;
-                    }
-                    start(touch.clientX, touch.clientY);
-                },
-                { passive: true }
-            );
-
-            scene.addEventListener(
-                "touchmove",
-                (event) => {
-                    const touch = event.touches[0];
-                    if (!touch || !isActive) {
-                        return;
-                    }
-                    updatePoint(touch.clientX, touch.clientY);
-                    event.preventDefault();
-                },
-                { passive: false }
-            );
-
-            scene.addEventListener("touchend", stop, { passive: true });
-            scene.addEventListener("touchcancel", stop, { passive: true });
+            button.classList.toggle("is-on", Boolean(state.settings[key]));
+            button.setAttribute("aria-pressed", String(Boolean(state.settings[key])));
         });
-    }
-
-    packList.addEventListener("click", (event) => {
-        const target = event.target;
-        if (!(target instanceof Element)) {
-            return;
-        }
-
-        const button = target.closest("[data-pack-option]");
-        if (!(button instanceof HTMLButtonElement)) {
-            return;
-        }
-
-        if (state.currentPack && !state.currentPack.complete) {
-            return;
-        }
-
-        const packId = button.dataset.packOption;
-        if (!packId || !(packId in packConfigs)) {
-            return;
-        }
-
-        state.selectedPack = packId;
-        renderMarketplace();
-    });
-
-    buyPackButton.addEventListener("click", () => {
-        buySelectedPack();
-    });
-
-    clearPackButton.addEventListener("click", () => {
-        clearCurrentPack();
-    });
-
-    packStackWindow.addEventListener("click", () => {
-        revealNextCard();
-    });
-
-    packStackWindow.addEventListener("keydown", (event) => {
-        if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            revealNextCard();
-        }
-    });
-
-    packRipTop.addEventListener("pointerdown", (event) => {
-        if (!state.currentPack || state.currentPack.ripped) {
-            return;
-        }
-
-        state.drag.active = true;
-        state.drag.pointerId = event.pointerId;
-        state.drag.startX = event.clientX;
-        packRipTop.setPointerCapture(event.pointerId);
-        event.preventDefault();
-    });
-
-    packRipTop.addEventListener("pointermove", (event) => {
-        if (!state.drag.active || event.pointerId !== state.drag.pointerId) {
-            return;
-        }
-
-        const delta = event.clientX - state.drag.startX;
-        setRipProgress(delta / 140);
-    });
-
-    const finishRipInteraction = (event) => {
-        if (!state.drag.active || event.pointerId !== state.drag.pointerId) {
-            return;
-        }
-
-        if (state.drag.progress >= 0.55 && state.currentPack && !state.currentPack.ripped) {
-            state.currentPack.ripped = true;
-            packProduct.classList.add("is-opened");
-            packProduct.style.setProperty("--rip-progress", "1");
-        } else {
-            setRipProgress(0);
-        }
-
-        state.drag.active = false;
-        state.drag.pointerId = null;
-        renderMarketplace();
     };
 
-    packRipTop.addEventListener("pointerup", finishRipInteraction);
-    packRipTop.addEventListener("pointercancel", finishRipInteraction);
+    const switchTab = (targetTab) => {
+        accountTabs.forEach((button) => {
+            const isActive =
+            button instanceof HTMLButtonElement &&
+            button.dataset.accountTab === targetTab;
 
-    renderMarketplace();
-    bindMarketTilt(revealedCards);
+            button.classList.toggle("is-active", isActive);
+            button.setAttribute("aria-selected", String(isActive));
+        });
+
+        accountPanels.forEach((panel) => {
+            const isActive =
+            panel instanceof HTMLElement &&
+            panel.dataset.accountPanel === targetTab;
+
+            panel.classList.toggle("is-active", isActive);
+            panel.hidden = !isActive;
+        });
+    };
+
+    const openAchievementsModal = () => {
+        achievementsModal.hidden = false;
+        document.body.classList.add("modal-open");
+
+        requestAnimationFrame(() => {
+            achievementsModal.classList.add("is-open");
+            achievementsModal.querySelector(".account-modal-close")?.focus({ preventScroll: true });
+        });
+    };
+
+    const closeAchievementsModal = () => {
+        achievementsModal.classList.remove("is-open");
+        document.body.classList.remove("modal-open");
+
+        window.setTimeout(() => {
+            achievementsModal.hidden = true;
+        }, 280);
+    };
+
+    scene.addEventListener('mousemove', (event) => {
+        if (state.isAnimating) {
+            return;
+        }
+
+        state.isHovering = true;
+
+        const rect = scene.getBoundingClientRect();
+        const mouseX = event.clientX - rect.left;
+        const mouseY = event.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        const normX = (mouseX - centerX) / centerX;
+        const normY = (mouseY - centerY) / centerY;
+
+        state.targetTiltX = normY * -20;
+        state.targetTiltY = normX * 20;
+
+        const shineX = (mouseX / rect.width) * 100;
+        const shineY = (mouseY / rect.height) * 100;
+
+        shineFront.style.setProperty('--shine-x', `${shineX}%`);
+        shineFront.style.setProperty('--shine-y', `${shineY}%`);
+        shineBack.style.setProperty('--shine-x', `${shineX}%`);
+        shineBack.style.setProperty('--shine-y', `${shineY}%`);
+
+        const angle = Math.atan2(mouseY - centerY, mouseX - centerX) * (180 / Math.PI);
+        chipHolo.style.setProperty('--holo-angle', `${angle}deg`);
+        chipGrating.style.setProperty('--holo-angle', `${angle}deg`);
+
+        const shiftX = `${-33 + normX * -25}%`;
+        const shiftY = `${-33 + normY * -25}%`;
+        chipIridescent.style.setProperty('--holo-shift-x', shiftX);
+        chipIridescent.style.setProperty('--holo-shift-y', shiftY);
+
+        const specX = 50 + normX * 40;
+        const specY = 50 + normY * 40;
+        chipSpecular.style.setProperty('--holo-cx', `${specX}%`);
+        chipSpecular.style.setProperty('--holo-cy', `${specY}%`);
+
+        shineFront.style.opacity = '1';
+        shineBack.style.opacity = '1';
+        chipHolo.style.opacity = '1';
+        chipGrating.style.opacity = '1';
+        chipIridescent.style.opacity = '1';
+        chipSpecular.style.opacity = '1';
+    });
+
+    scene.addEventListener('mouseleave', () => {
+        state.isHovering = false;
+        state.targetTiltX = 0;
+        state.targetTiltY = 0;
+
+        shineFront.style.opacity = '0';
+        shineBack.style.opacity = '0';
+        chipHolo.style.opacity = '0';
+        chipGrating.style.opacity = '0';
+        chipIridescent.style.opacity = '0';
+        chipSpecular.style.opacity = '0';
+    });
+
+    const animate = () => {
+        state.currentTiltX += (state.targetTiltX - state.currentTiltX) * 0.08;
+        state.currentTiltY += (state.targetTiltY - state.currentTiltY) * 0.08;
+
+        if (Math.abs(state.currentTiltX) < 0.01) state.currentTiltX = 0;
+        if (Math.abs(state.currentTiltY) < 0.01) state.currentTiltY = 0;
+
+        if (!state.isAnimating) {
+            const flipOffset = state.isFlipped ? 180 : 0;
+            card.style.transform = `rotateX(${state.currentTiltX}deg) rotateY(${state.currentTiltY + flipOffset}deg)`;
+        }
+
+        requestAnimationFrame(animate);
+    };
+
+    const flipCard = () => {
+        if (state.isAnimating) {
+            return;
+        }
+
+        state.isFlipped = !state.isFlipped;
+        state.isAnimating = true;
+
+        state.targetTiltX = 0;
+        state.targetTiltY = 0;
+        state.currentTiltX = 0;
+        state.currentTiltY = 0;
+
+        card.classList.add('is-animating');
+        card.style.transform = state.isFlipped
+        ? 'rotateX(0deg) rotateY(180deg)'
+        : 'rotateX(0deg) rotateY(0deg)';
+
+        hint.innerHTML = state.isFlipped
+        ? '<span class="cc-hint-icon">↻</span> Click to flip back'
+        : '<span class="cc-hint-icon">↻</span> Click to flip the card';
+
+        window.setTimeout(() => {
+            card.classList.remove('is-animating');
+            state.isAnimating = false;
+        }, 850);
+    };
+
+    card.addEventListener('click', flipCard);
+    card.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            flipCard();
+        }
+    });
+
+    document.querySelector(".account-tabs")?.addEventListener("click", (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLButtonElement)) {
+            return;
+        }
+
+        const tab = target.dataset.accountTab;
+        if (!tab) {
+            return;
+        }
+
+        switchTab(tab);
+    });
+
+    openAchievementsButton.addEventListener("click", () => {
+        openAchievementsModal();
+    });
+
+    achievementsModal.addEventListener("click", (event) => {
+        const target = event.target;
+        if (target instanceof Element && target.hasAttribute("data-close-achievements")) {
+            closeAchievementsModal();
+        }
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (!achievementsModal.hidden && event.key === "Escape") {
+            event.preventDefault();
+            closeAchievementsModal();
+        }
+    });
+
+    form.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        state.profile.name = nameInput.value.trim() || defaultProfile.name;
+        state.profile.title = titleInput.value.trim() || defaultProfile.title;
+        state.profile.memberSince = sinceInput.value.trim() || defaultProfile.memberSince;
+
+        saveJson(PROFILE_KEY, state.profile);
+        renderProfile();
+        profileStatus.textContent = "Local profile updated for this device.";
+    });
+
+    settingsButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            const key = button.dataset.settingKey;
+            if (!key) {
+                return;
+            }
+
+            state.settings[key] = !state.settings[key];
+            saveJson(SETTINGS_KEY, state.settings);
+            renderSettings();
+            settingsStatus.textContent = "Local preview settings saved.";
+        });
+    });
+
+    renderProfile();
+    renderSettings();
+    switchTab("edit");
+    animate();
 })();

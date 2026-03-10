@@ -17,8 +17,18 @@
     rel="stylesheet"
   />
 
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+
   <link rel="stylesheet" href="assets/css/styles.css" />
   <script defer src="assets/js/app.js"></script>
+  <script type="module" src="assets/js/shop-3d.js"></script>
 </head>
 <body data-page="shop">
   <div class="ambient ambient-stripes" aria-hidden="true"></div>
@@ -62,7 +72,7 @@
       <section class="market-wallet luxury-panel" aria-label="Current gold balance">
         <div class="market-wallet-copy">
           <span class="market-wallet-label">Current Gold</span>
-          <strong class="market-wallet-value" id="marketGoldValue">920</strong>
+          <strong class="market-wallet-value" id="marketGoldValue">10000</strong>
         </div>
 
         <p class="market-wallet-note">
@@ -103,57 +113,17 @@
             <p class="market-stage-price" id="marketStagePrice">120 Gold</p>
           </div>
 
-          <div class="pack-theater">
-            <div class="pack-scene" id="packScene">
-              <div class="pack-product is-standard" id="packProduct">
-                <button
-                  type="button"
-                  class="pack-rip-top"
-                  id="packRipTop"
-                  aria-label="Drag to tear open the top of the pack"
-                >
-                  <span class="pack-rip-top-text">Drag to tear</span>
-                </button>
-
-                <div class="pack-product-inner">
-                  <div class="pack-foil-lines" aria-hidden="true"></div>
-
-                  <div class="pack-branding">
-                    <span class="brand-word">CARDs</span>
-                    <span class="brand-version">2.0</span>
-                  </div>
-
-                  <p class="pack-kind" id="packKindText">Standard Pack</p>
-                  <p class="pack-subtitle" id="packSubtitleText">4 cards · common-heavy spread</p>
-
-                  <div class="pack-emblem" id="packEmblem" aria-hidden="true"></div>
-
-                  <button
-                    type="button"
-                    class="pack-stack-window"
-                    id="packStackWindow"
-                    aria-label="Reveal the next card from the pack"
-                  >
-                    <div class="pack-stack" id="packStack"></div>
-                  </button>
-                </div>
-              </div>
-
-              <div class="pack-floor-glow" aria-hidden="true"></div>
-            </div>
-
-            <p class="pack-guidance" id="packGuidance">
-              Buy a pack to begin. Then drag across the top seam to tear it open.
-            </p>
+          <div class="pack3d-shell">
+            <div class="pack3d-viewport" id="pack3dViewport" aria-label="Interactive 3D pack"></div>
           </div>
+
+          <p class="pack3d-guidance" id="packGuidance">
+            Buy a pack to begin. Then drag across the top seam to tear it open.
+          </p>
 
           <div class="market-stage-actions">
             <button type="button" class="market-buy-button" id="buyPackButton">
-              Buy Standard Pack — 120 Gold
-            </button>
-
-            <button type="button" class="market-secondary-button" id="clearPackButton" hidden>
-              Clear Current Pack
+              Buy Pack
             </button>
           </div>
         </section>
