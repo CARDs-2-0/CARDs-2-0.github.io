@@ -86,7 +86,8 @@
         ".pack3d-viewport canvas",
         ".nav-pill",
         ".news-modal-close",
-        ".star-label"
+        ".star-label",
+        ".cc-scene"
     ].join(", ");
 
     const orbHideSelector = [
@@ -95,6 +96,8 @@
         ".pack3d-viewport",
         ".pack3d-viewport canvas"
     ].join(", ");
+
+    const ccHoverSelector = ".cc-scene";
 
     let targetX = window.innerWidth / 2;
     let targetY = window.innerHeight / 2;
@@ -106,10 +109,12 @@
         const onText = Boolean(isElement && element.closest(textSelector));
         const onInteractive = Boolean(isElement && element.closest(interactiveSelector));
         const hideOrb = Boolean(isElement && element.closest(orbHideSelector));
+        const onCC = Boolean(isElement && element.closest(ccHoverSelector));
 
         cursor.classList.toggle("is-text", onText);
-        cursor.classList.toggle("is-active", onInteractive && !onText);
+        cursor.classList.toggle("is-active", onInteractive && !onText && !onCC);
         cursor.classList.toggle("is-reveal", hideOrb);
+        cursor.classList.toggle("is-cc-hover", onCC);
     };
 
     const updateImmediate = () => {
