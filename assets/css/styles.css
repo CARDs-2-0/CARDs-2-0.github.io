@@ -249,22 +249,15 @@ input:focus-visible {
 }
 
 .cursor.is-cc-hover .cursor-orb {
-    opacity: 1;
-    width: 220px;
-    height: 220px;
-    background: radial-gradient(
-        circle,
-        rgba(255, 255, 255, 0.22) 0%,
-                                rgba(255, 255, 255, 0.08) 30%,
-                                rgba(255, 255, 255, 0) 68%
-    );
-    filter: blur(8px);
-    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.82);
 }
 
 .cursor.is-cc-hover .cursor-shape {
-    background: rgba(255, 255, 255, 0.9);
-    box-shadow: 0 0 24px rgba(255, 255, 255, 0.3);
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 0 16px rgba(255, 255, 255, 0.18);
 }
 
 @media (pointer: coarse) {
@@ -2848,27 +2841,34 @@ input:focus-visible {
 }
 
 .cc-face .shine {
-    inset: auto;
-    top: 0;
-    left: 0;
+    inset: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(
-        circle at var(--shine-x, 50%) var(--shine-y, 50%),
-                                rgba(255, 255, 255, 0.22) 0%,
-                                rgba(255, 255, 255, 0.08) 20%,
-                                rgba(255, 255, 255, 0.02) 40%,
-                                transparent 60%
-    );
+    position: absolute;
     z-index: 10;
     border-radius: 20px;
-    transition: opacity 0.3s ease;
-    filter: none;
-    transform: none;
-    mix-blend-mode: normal;
     pointer-events: none;
     opacity: 0;
-    position: absolute;
+    transition: opacity 0.22s ease;
+    filter: none;
+    transform: none;
+    mix-blend-mode: screen;
+    background:
+    radial-gradient(
+        circle at var(--shine-x, 50%) var(--shine-y, 50%),
+                    rgba(255, 255, 255, 0.16) 0%,
+                    rgba(255, 255, 255, 0.08) 14%,
+                    rgba(255, 255, 255, 0.025) 28%,
+                    rgba(255, 255, 255, 0) 48%
+    ),
+    linear-gradient(
+        120deg,
+        rgba(255, 255, 255, 0) 20%,
+                    rgba(255, 255, 255, 0.025) 40%,
+                    rgba(255, 255, 255, 0.08) 50%,
+                    rgba(255, 255, 255, 0.025) 60%,
+                    rgba(255, 255, 255, 0) 80%
+    );
 }
 
 /* Chip + Holo */
@@ -2977,11 +2977,19 @@ input:focus-visible {
 .cc-card-brand {
     display: inline-flex;
     align-items: baseline;
-    gap: 0.2rem;
-    font-family: 'Orbitron', monospace;
-    font-size: 15px;
-    font-weight: 900;
-    letter-spacing: 2px;
+    gap: 0.32rem;
+    font-family: "Syne", sans-serif;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+
+.cc-card-brand .brand-word {
+    font-size: 1.02rem;
+}
+
+.cc-card-brand .brand-version {
+    font-size: 0.95rem;
 }
 
 .cc-card-tier {
@@ -3210,6 +3218,7 @@ input:focus-visible {
     grid-template-columns: repeat(3, 1fr);
     gap: 6px;
     flex: 1;
+    align-content: stretch;
 }
 
 .cc-back-stat {

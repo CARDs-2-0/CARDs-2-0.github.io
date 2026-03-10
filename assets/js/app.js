@@ -1524,9 +1524,7 @@
     const winRate = document.getElementById("accountWinRate");
     const matches = document.getElementById("accountMatches");
     const unlockedTotal = document.getElementById("accountUnlockedTotal");
-    const memberSinceBack = document.getElementById("accountMemberSinceBack");
     const levelBack = document.getElementById("accountLevelBack");
-    const vaultIdBack = document.getElementById("accountVaultIdBack");
 
     const goldStat = document.getElementById("accountGoldStat");
     const unlockedStat = document.getElementById("accountUnlockedStat");
@@ -1569,9 +1567,7 @@
         !winRate ||
         !matches ||
         !unlockedTotal ||
-        !memberSinceBack ||
         !levelBack ||
-        !vaultIdBack ||
         !goldStat ||
         !unlockedStat ||
         !winRateStat ||
@@ -1739,9 +1735,7 @@
         winRate.textContent = `${winRateValue.toFixed(1)}%`;
         matches.textContent = String(totalMatches);
         unlockedTotal.textContent = String(unlockedIds.length);
-        memberSinceBack.textContent = profile.memberSince;
         levelBack.textContent = String(profile.level);
-        vaultIdBack.textContent = vaultId;
 
         goldStat.textContent = String(gold);
         unlockedStat.textContent = String(unlockedIds.length);
@@ -1904,9 +1898,9 @@
         ? 'rotateX(0deg) rotateY(180deg)'
         : 'rotateX(0deg) rotateY(0deg)';
 
-        hint.innerHTML = state.isFlipped
-        ? '<span class="cc-hint-icon">↻</span> Click to flip back'
-        : '<span class="cc-hint-icon">↻</span> Click to flip the card';
+        hint.textContent = state.isFlipped
+        ? "Click to flip back"
+        : "Click to flip the card";
 
         window.setTimeout(() => {
             card.classList.remove('is-animating');
