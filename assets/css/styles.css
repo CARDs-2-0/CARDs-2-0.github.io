@@ -1855,21 +1855,41 @@ input:focus-visible {
     }
 
     .nav-pill {
+        position: relative;
         flex-wrap: nowrap;
         flex-direction: row;
         justify-content: flex-start;
         align-items: center;
-        gap: 0.55rem;
+        gap: 0.35rem;
         padding: 0.55rem 0.65rem;
-        overflow-x: auto;
-        overflow-y: hidden;
+        overflow: hidden;
         white-space: nowrap;
         border-radius: 999px;
     }
 
     .brand {
+        position: relative;
+        z-index: 2;
         flex: 0 0 auto;
         gap: 0.16rem;
+        padding-right: 0.35rem;
+        margin-right: 0.1rem;
+    }
+
+    .brand::after {
+        content: "";
+        position: absolute;
+        top: -0.45rem;
+        right: -0.2rem;
+        bottom: -0.45rem;
+        width: 18px;
+        pointer-events: none;
+        background: linear-gradient(
+            90deg,
+            rgba(18, 18, 18, 0.96) 0%,
+                                    rgba(18, 18, 18, 0.78) 55%,
+                                    rgba(18, 18, 18, 0) 100%
+        );
     }
 
     .brand .brand-word {
@@ -1881,11 +1901,34 @@ input:focus-visible {
     }
 
     .nav-links {
-        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        flex: 1 1 auto;
+        min-width: 0;
+        width: auto;
         flex-wrap: nowrap;
-        width: max-content;
-        min-width: max-content;
         gap: 0.14rem;
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+        padding-right: 1.35rem;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .nav-links::-webkit-scrollbar {
+        display: none;
+    }
+
+    .site-header .container::before,
+    .site-header .container::after {
+        opacity: 0;
+        transition: opacity 0.2s ease;
+    }
+
+    .site-header .container.has-nav-overflow:not(.is-nav-end)::before,
+    .site-header .container.has-nav-overflow:not(.is-nav-end)::after {
+        opacity: 1;
     }
 
     .nav-link {
@@ -2761,6 +2804,7 @@ input:focus-visible {
     width: min(100%, 460px);
     aspect-ratio: 86 / 54;
     z-index: 1;
+    touch-action: none;
 }
 
 @media (pointer: fine) {
@@ -3646,20 +3690,34 @@ input:focus-visible {
 }
 
 @media (max-width: 760px) {
-    .cc-scene {
+    .account-membership-column {
         width: 100%;
-        max-width: 380px;
+        justify-items: stretch;
+    }
+
+    .account-card-block {
+        width: 100%;
+        align-items: stretch;
+    }
+
+    .cc-scene {
+        width: calc(100% + 16px);
+        max-width: none;
+        margin-inline: -8px;
         aspect-ratio: 86 / 54;
         height: auto;
     }
 
     .cc-front-content {
-        padding: 18px 20px 16px;
+        padding: 20px 22px 18px;
     }
 
-    .cc-card-brand {
-        font-size: 13px;
-        letter-spacing: 1.5px;
+    .cc-card-brand .brand-word {
+        font-size: 0.92rem;
+    }
+
+    .cc-card-brand .brand-version {
+        font-size: 0.86rem;
     }
 
     .cc-card-tier {
@@ -3669,8 +3727,8 @@ input:focus-visible {
     }
 
     .chip {
-        width: 40px;
-        height: 30px;
+        width: 42px;
+        height: 31px;
     }
 
     .cc-contactless {
@@ -3679,22 +3737,22 @@ input:focus-visible {
     }
 
     .cc-card-number {
-        font-size: 13px;
-        letter-spacing: 2.5px;
+        font-size: 13.5px;
+        letter-spacing: 2.6px;
     }
 
     .cc-profile-copy h2 {
-        font-size: 0.85rem;
+        font-size: 0.92rem;
     }
 
     .cc-profile-copy p {
-        font-size: 0.65rem;
+        font-size: 0.68rem;
     }
 
     .cc-profile-pic {
-        width: 36px;
-        height: 36px;
-        font-size: 0.72rem;
+        width: 40px;
+        height: 40px;
+        font-size: 0.76rem;
     }
 
     .cc-card-label {
@@ -3702,17 +3760,17 @@ input:focus-visible {
     }
 
     .cc-card-value {
-        font-size: 10px;
+        font-size: 10.5px;
     }
 
     .cc-magnetic-strip {
-        height: 32px;
-        margin-top: 16px;
+        height: 34px;
+        margin-top: 18px;
     }
 
     .cc-back-content {
-        padding: 10px 20px 14px;
-        height: calc(100% - 48px);
+        padding: 11px 22px 14px;
+        height: calc(100% - 52px);
     }
 
     .cc-back-label {
@@ -3729,13 +3787,14 @@ input:focus-visible {
     }
 
     .cc-back-stats-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 4px;
     }
 
     .cc-back-stat {
-        padding: 4px 6px;
-        border-radius: 6px;
+        min-height: 0;
+        padding: 5px 6px;
+        border-radius: 7px;
     }
 
     .cc-back-stat strong {

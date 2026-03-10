@@ -9,6 +9,45 @@
 })();
 
 (() => {
+    const navPill = document.querySelector(".nav-pill");
+    const navLinks = navPill?.querySelector(".nav-links");
+    const navContainer = navPill?.closest(".container");
+
+    if (!navPill || !navLinks || !navContainer) {
+        return;
+    }
+
+    const mobileQuery = window.matchMedia("(max-width: 760px)");
+
+    const updateScrollableNavState = () => {
+        if (!mobileQuery.matches) {
+            navContainer.classList.remove("has-nav-overflow", "is-nav-end");
+            navLinks.scrollLeft = 0;
+            return;
+        }
+
+        const maxScroll = Math.max(0, navLinks.scrollWidth - navLinks.clientWidth);
+        const hasOverflow = maxScroll > 4;
+        const atEnd = !hasOverflow || navLinks.scrollLeft >= maxScroll - 4;
+
+        navContainer.classList.toggle("has-nav-overflow", hasOverflow);
+        navContainer.classList.toggle("is-nav-end", atEnd);
+    };
+
+    navLinks.addEventListener("scroll", updateScrollableNavState, { passive: true });
+    window.addEventListener("resize", updateScrollableNavState, { passive: true });
+    window.addEventListener("load", updateScrollableNavState);
+
+    if (typeof mobileQuery.addEventListener === "function") {
+        mobileQuery.addEventListener("change", updateScrollableNavState);
+    } else if (typeof mobileQuery.addListener === "function") {
+        mobileQuery.addListener(updateScrollableNavState);
+    }
+
+    requestAnimationFrame(updateScrollableNavState);
+})();
+
+(() => {
     const greetingElement = document.getElementById("welcomeGreeting");
     if (!greetingElement) {
         return;
@@ -1636,7 +1675,11 @@
  targetTiltX: 0,
  targetTiltY: 0,
  currentTiltX: 0,
- currentTiltY: 0
+ currentTiltY: 0,
+ touchStartX: 0,
+ touchStartY: 0,
+ touchMoved: false,
+ ignoreNextClick: false
     };
 
     const getUnlockedIds = () => {
@@ -1803,7 +1846,7 @@
         }, 280);
     };
 
-    scene.addEventListener('mousemove', (event) => {
+    const updateMembershipTilt = (clientX, clientY) => {
         if (state.isAnimating) {
             return;
         }
@@ -1811,13 +1854,13 @@
         state.isHovering = true;
 
         const rect = scene.getBoundingClientRect();
-        const mouseX = event.clientX - rect.left;
-        const mouseY = event.clientY - rect.top;
+        const mouseX = clientX - rect.left;
+        const mouseY = clientY - rect.top;
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
 
-        const normX = (mouseX - centerX) / centerX;
-        const normY = (mouseY - centerY) / centerY;
+        const normX = Math.max(-1, Math.min(1, (mouseX - centerX) / centerX));
+        const normY = Math.max(-1, Math.min(1, (mouseY - centerY) / centerY));
 
         state.targetTiltX = normY * -20;
         state.targetTiltY = normX * 20;
@@ -1850,9 +1893,9 @@
         chipGrating.style.opacity = '1';
         chipIridescent.style.opacity = '1';
         chipSpecular.style.opacity = '1';
-    });
+    };
 
-    scene.addEventListener('mouseleave', () => {
+    const clearMembershipTilt = () => {
         state.isHovering = false;
         state.targetTiltX = 0;
         state.targetTiltY = 0;
@@ -1863,7 +1906,79 @@
         chipGrating.style.opacity = '0';
         chipIridescent.style.opacity = '0';
         chipSpecular.style.opacity = '0';
+    };
+
+    scene.addEventListener("mousemove", (event) => {
+        updateMembershipTilt(event.clientX, event.clientY);
     });
+
+    scene.addEventListener("mouseleave", () => {
+        clearMembershipTilt();
+    });
+
+    scene.addEventListener(
+        "touchstart",
+        (event) => {
+            const touch = event.touches[0];
+            if (!touch) {
+                return;
+            }
+
+            state.touchStartX = touch.clientX;
+            state.touchStartY = touch.clientY;
+            state.touchMoved = false;
+
+            updateMembershipTilt(touch.clientX, touch.clientY);
+        },
+        { passive: true }
+    );
+
+    scene.addEventListener(
+        "touchmove",
+        (event) => {
+            const touch = event.touches[0];
+            if (!touch) {
+                return;
+            }
+
+            const movedDistance =
+            Math.abs(touch.clientX - state.touchStartX) +
+            Math.abs(touch.clientY - state.touchStartY);
+
+            if (movedDistance > 6) {
+                state.touchMoved = true;
+            }
+
+            updateMembershipTilt(touch.clientX, touch.clientY);
+            event.preventDefault();
+        },
+        { passive: false }
+    );
+
+    scene.addEventListener(
+        "touchend",
+        () => {
+            if (state.touchMoved) {
+                state.ignoreNextClick = true;
+                window.setTimeout(() => {
+                    state.ignoreNextClick = false;
+                }, 320);
+            }
+
+            state.touchMoved = false;
+            clearMembershipTilt();
+        },
+        { passive: true }
+    );
+
+    scene.addEventListener(
+        "touchcancel",
+        () => {
+            state.touchMoved = false;
+            clearMembershipTilt();
+        },
+        { passive: true }
+    );
 
     const animate = () => {
         state.currentTiltX += (state.targetTiltX - state.currentTiltX) * 0.08;
@@ -1908,7 +2023,16 @@
         }, 850);
     };
 
-    card.addEventListener('click', flipCard);
+    card.addEventListener("click", (event) => {
+        if (state.ignoreNextClick) {
+            state.ignoreNextClick = false;
+            event.preventDefault();
+            return;
+        }
+
+        flipCard();
+    });
+
     card.addEventListener('keydown', (event) => {
         if (event.key === 'Enter' || event.key === ' ') {
             event.preventDefault();
