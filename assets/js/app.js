@@ -11,8 +11,9 @@
 (() => {
     const navPill = document.querySelector(".nav-pill");
     const navLinks = navPill?.querySelector(".nav-links");
+    const brand = navPill?.querySelector(".brand");
 
-    if (!navPill || !navLinks) {
+    if (!navPill || !navLinks || !brand) {
         return;
     }
 
@@ -20,19 +21,26 @@
 
     const updateScrollableNavState = () => {
         if (!mobileQuery.matches) {
-            navLinks.classList.remove("has-nav-overflow", "is-nav-start", "is-nav-end");
+            navPill.classList.remove("has-nav-overflow", "is-nav-start", "is-nav-end");
+            navPill.style.removeProperty("--nav-hint-left");
             navLinks.scrollLeft = 0;
             return;
         }
+
+        const navPillRect = navPill.getBoundingClientRect();
+        const navLinksRect = navLinks.getBoundingClientRect();
+        const leftHintStart = Math.max(0, Math.round(navLinksRect.left - navPillRect.left));
+
+        navPill.style.setProperty("--nav-hint-left", `${leftHintStart}px`);
 
         const maxScroll = Math.max(0, navLinks.scrollWidth - navLinks.clientWidth);
         const hasOverflow = maxScroll > 4;
         const atStart = navLinks.scrollLeft <= 4;
         const atEnd = !hasOverflow || navLinks.scrollLeft >= maxScroll - 4;
 
-        navLinks.classList.toggle("has-nav-overflow", hasOverflow);
-        navLinks.classList.toggle("is-nav-start", atStart);
-        navLinks.classList.toggle("is-nav-end", atEnd);
+        navPill.classList.toggle("has-nav-overflow", hasOverflow);
+        navPill.classList.toggle("is-nav-start", atStart);
+        navPill.classList.toggle("is-nav-end", atEnd);
     };
 
     navLinks.addEventListener("scroll", updateScrollableNavState, { passive: true });

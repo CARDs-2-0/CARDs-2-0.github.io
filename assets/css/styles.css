@@ -1856,7 +1856,7 @@ input:focus-visible {
 
     @keyframes mobile-nav-hint-blink {
         0%, 100% {
-            opacity: 0.72;
+            opacity: 0.62;
         }
         50% {
             opacity: 1;
@@ -1874,6 +1874,57 @@ input:focus-visible {
         overflow: hidden;
         white-space: nowrap;
         border-radius: 999px;
+        --nav-hint-left: 110px;
+    }
+
+    .nav-pill::before,
+    .nav-pill::after {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 40px;
+        display: flex;
+        align-items: center;
+        pointer-events: none;
+        z-index: 2;
+        opacity: 0;
+        color: rgba(241, 196, 15, 0.82);
+        font-size: 1rem;
+        line-height: 1;
+        text-shadow: 0 0 10px rgba(241, 196, 15, 0.18);
+        transition: opacity 0.22s ease;
+    }
+
+    .nav-pill::before {
+        content: "‹";
+        left: var(--nav-hint-left);
+        justify-content: flex-start;
+        padding-left: 8px;
+        background: linear-gradient(
+            90deg,
+            rgba(8, 8, 8, 0.88) 0%,
+                                    rgba(8, 8, 8, 0.56) 46%,
+                                    rgba(8, 8, 8, 0) 100%
+        );
+    }
+
+    .nav-pill::after {
+        content: "›";
+        right: 0;
+        justify-content: flex-end;
+        padding-right: 8px;
+        background: linear-gradient(
+            270deg,
+            rgba(8, 8, 8, 0.88) 0%,
+                                    rgba(8, 8, 8, 0.56) 46%,
+                                    rgba(8, 8, 8, 0) 100%
+        );
+    }
+
+    .nav-pill.has-nav-overflow:not(.is-nav-start)::before,
+    .nav-pill.has-nav-overflow:not(.is-nav-end)::after {
+        opacity: 0.92;
+        animation: mobile-nav-hint-blink 1.9s ease-in-out infinite;
     }
 
     .brand {
@@ -1894,6 +1945,7 @@ input:focus-visible {
 
     .nav-links {
         position: relative;
+        z-index: 1;
         display: flex;
         align-items: center;
         flex: 1 1 auto;
@@ -1908,61 +1960,10 @@ input:focus-visible {
         padding-right: 1.35rem;
         scrollbar-width: none;
         -ms-overflow-style: none;
-        isolation: isolate;
     }
 
     .nav-links::-webkit-scrollbar {
         display: none;
-    }
-
-    .nav-links::before,
-    .nav-links::after {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        width: 34px;
-        display: flex;
-        align-items: center;
-        pointer-events: none;
-        z-index: 2;
-        opacity: 0;
-        transition: opacity 0.2s ease;
-        color: rgba(241, 196, 15, 0.82);
-        font-size: 1rem;
-        line-height: 1;
-        text-shadow: 0 0 10px rgba(241, 196, 15, 0.18);
-    }
-
-    .nav-links::before {
-        content: "‹";
-        left: 0;
-        justify-content: flex-start;
-        padding-left: 8px;
-        background: linear-gradient(
-            90deg,
-            rgba(8, 8, 8, 0.88) 0%,
-                                    rgba(8, 8, 8, 0.56) 46%,
-                                    rgba(8, 8, 8, 0) 100%
-        );
-    }
-
-    .nav-links::after {
-        content: "›";
-        right: 0;
-        justify-content: flex-end;
-        padding-right: 8px;
-        background: linear-gradient(
-            270deg,
-            rgba(8, 8, 8, 0.88) 0%,
-                                    rgba(8, 8, 8, 0.56) 46%,
-                                    rgba(8, 8, 8, 0) 100%
-        );
-    }
-
-    .nav-links.has-nav-overflow:not(.is-nav-start)::before,
-    .nav-links.has-nav-overflow:not(.is-nav-end)::after {
-        opacity: 0.92;
-        animation: mobile-nav-hint-blink 1.9s ease-in-out infinite;
     }
 
     .site-header .container::before,
