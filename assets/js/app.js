@@ -9,6 +9,91 @@
 })();
 
 (() => {
+    const STORAGE_KEY = "cards20-theme-mode";
+    const root = document.documentElement;
+    const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+    const normalizeThemeMode = (value) => {
+        if (value === "light" || value === "dark" || value === "system") {
+            return value;
+        }
+        return "system";
+    };
+
+    const resolveThemeMode = (mode) => {
+        return mode === "system" ? (mediaQuery.matches ? "dark" : "light") : mode;
+    };
+
+    const applyThemeMode = (mode) => {
+        const normalizedMode = normalizeThemeMode(mode);
+        const resolvedMode = resolveThemeMode(normalizedMode);
+
+        root.setAttribute("data-theme-mode", normalizedMode);
+        root.setAttribute("data-theme-resolved", resolvedMode);
+
+        if (themeColorMeta) {
+            themeColorMeta.setAttribute("content", resolvedMode === "light" ? "#f6f2e8" : "#080808");
+        }
+
+        return {
+            mode: normalizedMode,
+            resolved: resolvedMode
+        };
+    };
+
+    const loadThemeMode = () => {
+        try {
+            return normalizeThemeMode(
+                root.getAttribute("data-theme-mode") ||
+                localStorage.getItem(STORAGE_KEY) ||
+                "system"
+            );
+        } catch (error) {
+            return normalizeThemeMode(root.getAttribute("data-theme-mode") || "system");
+        }
+    };
+
+    const saveThemeMode = (mode) => {
+        const normalizedMode = normalizeThemeMode(mode);
+
+        try {
+            localStorage.setItem(STORAGE_KEY, normalizedMode);
+        } catch (error) {
+            //
+        }
+
+        return applyThemeMode(normalizedMode);
+    };
+
+    const handleSystemThemeChange = () => {
+        if (loadThemeMode() === "system") {
+            applyThemeMode("system");
+        }
+    };
+
+    applyThemeMode(loadThemeMode());
+
+    if (typeof mediaQuery.addEventListener === "function") {
+        mediaQuery.addEventListener("change", handleSystemThemeChange);
+    } else if (typeof mediaQuery.addListener === "function") {
+        mediaQuery.addListener(handleSystemThemeChange);
+    }
+
+    window.CARDS20Theme = {
+        getMode() {
+            return loadThemeMode();
+        },
+        getResolved() {
+            return root.getAttribute("data-theme-resolved") || resolveThemeMode(loadThemeMode());
+        },
+        setMode(mode) {
+            return saveThemeMode(mode);
+        }
+    };
+})();
+
+(() => {
     const navPill = document.querySelector(".nav-pill");
     const navLinks = navPill?.querySelector(".nav-links");
     const brand = navPill?.querySelector(".brand");
@@ -1595,6 +1680,7 @@
     const profileStatus = document.getElementById("accountProfileStatus");
 
     const settingsButtons = document.querySelectorAll("[data-setting-key]");
+    const themeButtons = document.querySelectorAll("[data-theme-mode]");
     const settingsStatus = document.getElementById("accountSettingsStatus");
 
     if (
@@ -1823,6 +1909,23 @@
 
             button.classList.toggle("is-on", Boolean(state.settings[key]));
             button.setAttribute("aria-pressed", String(Boolean(state.settings[key])));
+        });
+
+        const currentThemeMode =
+        typeof window.CARDS20Theme?.getMode === "function"
+        ? window.CARDS20Theme.getMode()
+        : "system";
+
+        themeButtons.forEach((button) => {
+            if (!(button instanceof HTMLButtonElement)) {
+                return;
+            }
+
+            const mode = button.dataset.themeMode;
+            const isActive = mode === currentThemeMode;
+
+            button.classList.toggle("is-active", isActive);
+            button.setAttribute("aria-pressed", String(isActive));
         });
     };
 
@@ -2114,6 +2217,23 @@
             saveJson(SETTINGS_KEY, state.settings);
             renderSettings();
             settingsStatus.textContent = "Local preview settings saved.";
+        });
+    });
+
+    themeButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            const mode = button.dataset.themeMode;
+            if (!mode || typeof window.CARDS20Theme?.setMode !== "function") {
+                return;
+            }
+
+            window.CARDS20Theme.setMode(mode);
+            renderSettings();
+
+            settingsStatus.textContent =
+            mode === "system"
+            ? "Theme now follows your device setting."
+            : `Theme set to ${mode} mode for this device.`;
         });
     });
 

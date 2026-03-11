@@ -20,6 +20,26 @@
     --parallax-slow: 0px;
 }
 
+html[data-theme-resolved="dark"] {
+    color-scheme: dark;
+}
+
+html[data-theme-resolved="light"] {
+    color-scheme: light;
+    --obsidian: #f6f2e8;
+    --gold: #b58b11;
+    --white: #171512;
+    --grey: #6f675c;
+    --text-soft: #45403a;
+    --line: rgba(23, 21, 18, 0.12);
+    --shadow-xl:
+    0 24px 64px rgba(114, 88, 20, 0.1),
+    0 6px 18px rgba(0, 0, 0, 0.05);
+    --shadow-lg:
+    0 18px 42px rgba(114, 88, 20, 0.08),
+    0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
 *,
 *::before,
 *::after {
@@ -3591,6 +3611,33 @@ input:focus-visible {
     background: #f7e39a;
 }
 
+.theme-mode-toggle {
+    display: inline-flex;
+    gap: 0.3rem;
+    padding: 0.28rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.09);
+    background: rgba(255,255,255,0.02);
+    max-width: 100%;
+}
+
+.theme-mode-button {
+    min-height: 40px;
+    padding: 0.62rem 0.95rem;
+    border-radius: 999px;
+    color: rgba(255,255,255,0.62);
+    transition:
+    background 0.22s ease,
+    color 0.22s ease,
+    transform 0.22s ease;
+    white-space: nowrap;
+}
+
+.theme-mode-button.is-active {
+    background: rgba(255,255,255,0.07);
+    color: #ffffff;
+}
+
 .account-modal[hidden] {
     display: none;
 }
@@ -3879,6 +3926,15 @@ input:focus-visible {
         flex-direction: column;
     }
 
+    .theme-mode-toggle {
+        width: 100%;
+    }
+
+    .theme-mode-button {
+        flex: 1 1 0;
+        text-align: center;
+    }
+
     .account-modal {
         padding: calc(env(safe-area-inset-top) + 76px) 8px max(4px, env(safe-area-inset-bottom));
         place-items: start center;
@@ -3889,6 +3945,256 @@ input:focus-visible {
         max-height: calc(100svh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 80px);
         padding: 1rem;
     }
+}
+
+html[data-theme-resolved="light"] body {
+    background:
+    radial-gradient(circle at 18% 10%, rgba(181, 139, 17, 0.08) 0%, transparent 28%),
+    radial-gradient(circle at 82% 14%, rgba(255, 255, 255, 0.6) 0%, transparent 24%),
+    linear-gradient(180deg, #fbf8f1 0%, #f4ede1 100%);
+    color: #171512;
+}
+
+html[data-theme-resolved="light"] .ambient-stripes::before,
+html[data-theme-resolved="light"] .ambient-stripes::after {
+    background: repeating-linear-gradient(
+        115deg,
+        transparent 0 26px,
+        rgba(181, 139, 17, 0.05) 26px 27px,
+                                          transparent 27px 66px
+    );
+}
+
+html[data-theme-resolved="light"] .ambient-stripes::before {
+    opacity: 0.16;
+}
+
+html[data-theme-resolved="light"] .ambient-stripes::after {
+    opacity: 0.07;
+    filter: blur(10px);
+}
+
+html[data-theme-resolved="light"] .ambient-vignette {
+    background:
+    radial-gradient(circle at 18% 12%, rgba(181, 139, 17, 0.08) 0%, transparent 34%),
+    radial-gradient(circle at 82% 20%, rgba(255, 255, 255, 0.24) 0%, transparent 24%),
+    radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0) 48%, rgba(222, 213, 198, 0.88) 100%);
+}
+
+html[data-theme-resolved="light"] .cursor-orb {
+    background: radial-gradient(
+        circle,
+        rgba(181, 139, 17, 0.14) 0%,
+                                rgba(181, 139, 17, 0.06) 34%,
+                                rgba(181, 139, 17, 0) 72%
+    );
+}
+
+html[data-theme-resolved="light"] .cursor-shape {
+    background: #171512;
+    box-shadow: 0 0 16px rgba(0, 0, 0, 0.12);
+}
+
+html[data-theme-resolved="light"] .cursor.is-text .cursor-shape {
+    background: rgba(23, 21, 18, 0.9);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+}
+
+html[data-theme-resolved="light"] .luxury-panel,
+html[data-theme-resolved="light"] .spotlight-card,
+html[data-theme-resolved="light"] .news-card,
+html[data-theme-resolved="light"] .review-card,
+html[data-theme-resolved="light"] .vault-card,
+html[data-theme-resolved="light"] .vault-empty,
+html[data-theme-resolved="light"] .market-pack-option,
+html[data-theme-resolved="light"] .market-detail-stat,
+html[data-theme-resolved="light"] .market-pull-status,
+html[data-theme-resolved="light"] .market-pull-card,
+html[data-theme-resolved="light"] .opened-cards-empty,
+html[data-theme-resolved="light"] .index-master-stat,
+html[data-theme-resolved="light"] .card-detail-stat,
+html[data-theme-resolved="light"] .card-detail-info,
+html[data-theme-resolved="light"] .setting-item,
+html[data-theme-resolved="light"] .achievement-item,
+html[data-theme-resolved="light"] .account-mini-card,
+html[data-theme-resolved="light"] .collection-toggle,
+html[data-theme-resolved="light"] .account-tabs,
+html[data-theme-resolved="light"] .theme-mode-toggle {
+    border-color: rgba(23, 21, 18, 0.08);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(247, 242, 233, 0.76));
+    box-shadow: var(--shadow-lg);
+}
+
+html[data-theme-resolved="light"] .luxury-panel::after {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.68), transparent 38%);
+    opacity: 0.75;
+}
+
+html[data-theme-resolved="light"] .nav-pill {
+    background: rgba(251, 247, 239, 0.8);
+    border-color: rgba(23, 21, 18, 0.08);
+}
+
+html[data-theme-resolved="light"] .nav-link {
+    color: rgba(23, 21, 18, 0.66);
+}
+
+html[data-theme-resolved="light"] .nav-link:hover,
+html[data-theme-resolved="light"] .nav-link.active {
+    color: #171512;
+    background: rgba(23, 21, 18, 0.05);
+}
+
+html[data-theme-resolved="light"] .nav-link.active {
+    color: #8d6b12;
+    box-shadow: inset 0 0 0 1px rgba(181, 139, 17, 0.22);
+}
+
+html[data-theme-resolved="light"] .nav-fade-left {
+    background: linear-gradient(
+        90deg,
+        rgba(246, 242, 232, 0.96) 0%,
+                                rgba(246, 242, 232, 0.7) 46%,
+                                rgba(246, 242, 232, 0) 100%
+    );
+}
+
+html[data-theme-resolved="light"] .nav-fade-right {
+    background: linear-gradient(
+        270deg,
+        rgba(246, 242, 232, 0.96) 0%,
+                                rgba(246, 242, 232, 0.7) 46%,
+                                rgba(246, 242, 232, 0) 100%
+    );
+}
+
+html[data-theme-resolved="light"] .text-input,
+html[data-theme-resolved="light"] .collection-input,
+html[data-theme-resolved="light"] .collection-select,
+html[data-theme-resolved="light"] .account-input {
+    background: rgba(255, 255, 255, 0.82);
+    border-color: rgba(23, 21, 18, 0.1);
+    color: #171512;
+}
+
+html[data-theme-resolved="light"] .text-input::placeholder,
+html[data-theme-resolved="light"] .collection-input::placeholder,
+html[data-theme-resolved="light"] .account-input::placeholder {
+    color: rgba(23, 21, 18, 0.36);
+}
+
+html[data-theme-resolved="light"] .text-input:hover,
+html[data-theme-resolved="light"] .text-input:focus,
+html[data-theme-resolved="light"] .collection-input:hover,
+html[data-theme-resolved="light"] .collection-input:focus,
+html[data-theme-resolved="light"] .collection-select:hover,
+html[data-theme-resolved="light"] .collection-select:focus,
+html[data-theme-resolved="light"] .account-input:hover,
+html[data-theme-resolved="light"] .account-input:focus {
+    border-color: rgba(181, 139, 17, 0.3);
+    box-shadow: 0 0 0 4px rgba(181, 139, 17, 0.08);
+    background: rgba(255, 255, 255, 0.96);
+}
+
+html[data-theme-resolved="light"] .collection-select {
+    background-image:
+    linear-gradient(45deg, transparent 50%, rgba(23, 21, 18, 0.72) 50%),
+    linear-gradient(135deg, rgba(23, 21, 18, 0.72) 50%, transparent 50%);
+}
+
+html[data-theme-resolved="light"] .ghost-button,
+html[data-theme-resolved="light"] .market-buy-button.is-dark {
+    border-color: rgba(23, 21, 18, 0.1);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(245, 240, 231, 0.9));
+    color: rgba(23, 21, 18, 0.82);
+}
+
+html[data-theme-resolved="light"] .ghost-button:hover:not(:disabled),
+html[data-theme-resolved="light"] .market-buy-button.is-dark:hover:not(:disabled) {
+    border-color: rgba(181, 139, 17, 0.28);
+    background: rgba(255, 255, 255, 0.96);
+}
+
+html[data-theme-resolved="light"] .collection-toggle button,
+html[data-theme-resolved="light"] .account-tab,
+html[data-theme-resolved="light"] .theme-mode-button {
+    color: rgba(23, 21, 18, 0.62);
+}
+
+html[data-theme-resolved="light"] .collection-toggle button.is-active,
+html[data-theme-resolved="light"] .account-tab.is-active,
+html[data-theme-resolved="light"] .theme-mode-button.is-active {
+    background: rgba(23, 21, 18, 0.08);
+    color: #171512;
+}
+
+html[data-theme-resolved="light"] .setting-toggle {
+    background: rgba(23, 21, 18, 0.1);
+}
+
+html[data-theme-resolved="light"] .setting-toggle span {
+    background: #ffffff;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12);
+}
+
+html[data-theme-resolved="light"] .setting-toggle.is-on {
+    background: rgba(181, 139, 17, 0.28);
+}
+
+html[data-theme-resolved="light"] .setting-toggle.is-on span {
+    background: #fff5d0;
+}
+
+html[data-theme-resolved="light"] .news-modal-dialog,
+html[data-theme-resolved="light"] .card-detail-dialog,
+html[data-theme-resolved="light"] .account-modal-dialog {
+    background: rgba(252, 248, 241, 0.96);
+}
+
+html[data-theme-resolved="light"] .news-modal-close,
+html[data-theme-resolved="light"] .card-detail-close,
+html[data-theme-resolved="light"] .account-modal-close {
+    background: rgba(23, 21, 18, 0.05);
+    color: rgba(23, 21, 18, 0.82);
+}
+
+html[data-theme-resolved="light"] .news-modal-close:hover,
+html[data-theme-resolved="light"] .card-detail-close:hover,
+html[data-theme-resolved="light"] .account-modal-close:hover {
+    background: rgba(23, 21, 18, 0.08);
+}
+
+html[data-theme-resolved="light"] .pack3d-shell {
+    border-color: rgba(23, 21, 18, 0.08);
+    background:
+    radial-gradient(circle at 50% 24%, rgba(23, 21, 18, 0.04), transparent 34%),
+    radial-gradient(circle at 50% 85%, rgba(181, 139, 17, 0.09), transparent 28%),
+    rgba(255, 255, 255, 0.58);
+}
+
+html[data-theme-resolved="light"] .site-footer a {
+    color: #9d7510;
+}
+
+html[data-theme-resolved="light"] .site-footer a:hover {
+    color: #7d5d0f;
+}
+
+html[data-theme-resolved="light"] .error-link {
+    color: #171512 !important;
+    border-color: rgba(23, 21, 18, 0.1) !important;
+    background: rgba(255, 255, 255, 0.72) !important;
+}
+
+html[data-theme-resolved="light"] .error-link:hover {
+    border-color: rgba(181, 139, 17, 0.28) !important;
+    background: rgba(255, 255, 255, 0.94) !important;
+}
+
+html[data-theme-resolved="light"] .error-link.primary {
+    color: #171512 !important;
+    border-color: rgba(181, 139, 17, 0.38) !important;
+    background: linear-gradient(135deg, #e7c65d, #c89817) !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

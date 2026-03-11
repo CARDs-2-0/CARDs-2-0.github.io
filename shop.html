@@ -9,6 +9,34 @@
     content="CARDs 2.0 Marketplace — buy packs, tear them open, and reveal your pulls."
   />
   <meta name="theme-color" content="#080808" />
+  <script>
+    (function () {
+      var storageKey = "cards20-theme-mode";
+      var mode = "system";
+
+      try {
+        mode = localStorage.getItem(storageKey) || "system";
+      } catch (error) {
+        mode = "system";
+      }
+
+      if (mode !== "light" && mode !== "dark" && mode !== "system") {
+        mode = "system";
+      }
+
+      var resolved = mode === "system"
+        ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+        : mode;
+
+      document.documentElement.setAttribute("data-theme-mode", mode);
+      document.documentElement.setAttribute("data-theme-resolved", resolved);
+
+      var themeMeta = document.querySelector('meta[name="theme-color"]');
+      if (themeMeta) {
+        themeMeta.setAttribute("content", resolved === "light" ? "#f6f2e8" : "#080808");
+      }
+    })();
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
