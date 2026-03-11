@@ -1930,6 +1930,7 @@ input:focus-visible {
     }
 
     .nav-fade-left {
+        border-radius: 999px 0 0 999px;
         justify-content: flex-start;
         padding-left: 8px;
         background: linear-gradient(
