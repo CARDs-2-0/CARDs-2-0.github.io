@@ -4372,6 +4372,133 @@ html[data-theme-resolved="light"] .error-link:hover {
     background: rgba(255, 255, 255, 0.96) !important;
 }
 
+/* Light mode corrective pass */
+
+html[data-theme-resolved="light"] {
+    --light-gold: #a97d0f;
+    --light-gold-strong: #8d6b12;
+    --light-gold-soft: rgba(169, 125, 15, 0.12);
+    --light-gold-line: rgba(169, 125, 15, 0.18);
+}
+
+html[data-theme-resolved="light"] .brand-version,
+html[data-theme-resolved="light"] .section-kicker,
+html[data-theme-resolved="light"] .eyebrow,
+html[data-theme-resolved="light"] .news-date,
+html[data-theme-resolved="light"] .statline,
+html[data-theme-resolved="light"] .market-pack-option-price,
+html[data-theme-resolved="light"] .market-stage-price,
+html[data-theme-resolved="light"] .card-detail-kicker,
+html[data-theme-resolved="light"] .review-rating,
+html[data-theme-resolved="light"] .market-wallet-value,
+html[data-theme-resolved="light"] .vault-card-line,
+html[data-theme-resolved="light"] .market-pull-line {
+    color: var(--light-gold) !important;
+}
+
+html[data-theme-resolved="light"] .nav-link.active,
+html[data-theme-resolved="light"] .site-footer a,
+html[data-theme-resolved="light"] .market-wallet-value,
+html[data-theme-resolved="light"] .star-label:hover,
+html[data-theme-resolved="light"] .star-label:hover ~ .star-label,
+html[data-theme-resolved="light"] .rating-input:checked ~ .star-label {
+    color: var(--light-gold-strong) !important;
+}
+
+html[data-theme-resolved="light"] .site-footer a:hover {
+    color: #6e510c !important;
+}
+
+html[data-theme-resolved="light"] .spotlight-thumb .card-face,
+html[data-theme-resolved="light"] .vault-card-media .card-face {
+    box-shadow: none !important;
+}
+
+html[data-theme-resolved="light"] .spotlight-thumb .card-face img,
+html[data-theme-resolved="light"] .vault-card-media .card-face img {
+    box-shadow: none !important;
+}
+
+html[data-theme-resolved="light"] .vault-card-line span:last-child,
+html[data-theme-resolved="light"] .market-pull-line span:last-child,
+html[data-theme-resolved="light"] .hero-note p,
+html[data-theme-resolved="light"] .welcome-pill p,
+html[data-theme-resolved="light"] .card-detail-copy-text {
+    color: #4c453b !important;
+}
+
+html[data-theme-resolved="light"] .account-tabs,
+html[data-theme-resolved="light"] .theme-mode-toggle,
+html[data-theme-resolved="light"] .collection-toggle {
+    border-color: rgba(23, 21, 18, 0.08) !important;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(246, 240, 230, 0.84)) !important;
+    box-shadow:
+    0 10px 22px rgba(167, 136, 61, 0.06),
+    0 2px 6px rgba(0, 0, 0, 0.03) !important;
+}
+
+html[data-theme-resolved="light"] .account-tab,
+html[data-theme-resolved="light"] .theme-mode-button,
+html[data-theme-resolved="light"] .collection-toggle button {
+    color: #4d453c !important;
+}
+
+html[data-theme-resolved="light"] .account-tab.is-active,
+html[data-theme-resolved="light"] .theme-mode-button.is-active,
+html[data-theme-resolved="light"] .collection-toggle button.is-active {
+    background: rgba(169, 125, 15, 0.14) !important;
+    color: #171512 !important;
+    box-shadow: inset 0 0 0 1px rgba(169, 125, 15, 0.12) !important;
+}
+
+html[data-theme-resolved="light"] .account-achievements-button,
+html[data-theme-resolved="light"] .account-action-button,
+html[data-theme-resolved="light"] .market-buy-button,
+html[data-theme-resolved="light"] .error-link.primary {
+    background: linear-gradient(135deg, #e7c65d, #c89817) !important;
+    color: #171512 !important;
+    border-color: rgba(169, 125, 15, 0.3) !important;
+    box-shadow: none !important;
+}
+
+html[data-theme-resolved="light"] .account-achievements-button:hover,
+html[data-theme-resolved="light"] .account-action-button:hover,
+html[data-theme-resolved="light"] .market-buy-button:hover {
+    box-shadow: none !important;
+}
+
+html[data-theme-resolved="light"] .star-label {
+    color: rgba(169, 125, 15, 0.34) !important;
+    text-shadow: none !important;
+}
+
+html[data-theme-resolved="light"] .star-label:hover,
+html[data-theme-resolved="light"] .star-label:hover ~ .star-label,
+html[data-theme-resolved="light"] .rating-input:checked ~ .star-label {
+    color: var(--light-gold) !important;
+    text-shadow: 0 0 10px rgba(169, 125, 15, 0.12) !important;
+}
+
+html[data-theme-resolved="light"] .cc-card-brand .brand-word {
+    background-image: linear-gradient(
+        120deg,
+        #ffffff 0%,
+        #fcfcfb 35%,
+        #f1f0ec 60%,
+        #ffffff 100%
+    ) !important;
+}
+
+html[data-theme-resolved="light"] .cc-card-brand .brand-version {
+    background-image: linear-gradient(
+        120deg,
+        #edc54a 0%,
+        #f3d25d 40%,
+        #dfb42c 72%,
+        #edc54a 100%
+    ) !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
     html {
         scroll-behavior: auto;
