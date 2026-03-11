@@ -32,10 +32,10 @@
     navPill.appendChild(fadeLeft);
     navPill.appendChild(fadeRight);
 
-    const updateScrollableNavState = () => {
+    const update = () => {
         if (!mobileQuery.matches) {
-            fadeLeft.style.display = "none";
-            fadeRight.style.display = "none";
+            fadeLeft.classList.remove("is-visible");
+            fadeRight.classList.remove("is-visible");
             navLinks.scrollLeft = 0;
             return;
         }
@@ -46,24 +46,24 @@
         const atEnd = !hasOverflow || navLinks.scrollLeft >= maxScroll - 4;
 
         if (brand) {
-            fadeLeft.style.left = `${brand.offsetLeft + brand.offsetWidth}px`;
+            fadeLeft.style.left = (brand.offsetLeft + brand.offsetWidth) + "px";
         }
 
-        fadeLeft.style.display = hasOverflow && !atStart ? "flex" : "none";
-        fadeRight.style.display = hasOverflow && !atEnd ? "flex" : "none";
+        fadeLeft.classList.toggle("is-visible", hasOverflow && !atStart);
+        fadeRight.classList.toggle("is-visible", hasOverflow && !atEnd);
     };
 
-    navLinks.addEventListener("scroll", updateScrollableNavState, { passive: true });
-    window.addEventListener("resize", updateScrollableNavState, { passive: true });
-    window.addEventListener("load", updateScrollableNavState);
+    navLinks.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update, { passive: true });
+    window.addEventListener("load", update);
 
     if (typeof mobileQuery.addEventListener === "function") {
-        mobileQuery.addEventListener("change", updateScrollableNavState);
+        mobileQuery.addEventListener("change", update);
     } else if (typeof mobileQuery.addListener === "function") {
-        mobileQuery.addListener(updateScrollableNavState);
+        mobileQuery.addListener(update);
     }
 
-    requestAnimationFrame(updateScrollableNavState);
+    requestAnimationFrame(update);
 })();
 
 (() => {

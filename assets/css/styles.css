@@ -1855,10 +1855,12 @@ input:focus-visible {
 
     @keyframes mobile-nav-hint-blink {
         0%, 100% {
-            opacity: 0.62;
+            color: rgba(241, 196, 15, 0.48);
+            text-shadow: 0 0 6px rgba(241, 196, 15, 0.06);
         }
         50% {
-            opacity: 1;
+            color: rgba(241, 196, 15, 0.95);
+            text-shadow: 0 0 14px rgba(241, 196, 15, 0.28);
         }
     }
 
@@ -1880,7 +1882,7 @@ input:focus-visible {
         z-index: 3;
         flex: 0 0 auto;
         gap: 0.16rem;
-        margin-right: 0.05rem;
+        margin-right: 0.15rem;
     }
 
     .brand .brand-word {
@@ -1904,8 +1906,8 @@ input:focus-visible {
         overflow-x: auto;
         overflow-y: hidden;
         white-space: nowrap;
-        padding-left: 0.15rem;
-        padding-right: 1.35rem;
+        padding-left: 0.25rem;
+        padding-right: 0.4rem;
         scrollbar-width: none;
         -ms-overflow-style: none;
     }
@@ -1919,6 +1921,7 @@ input:focus-visible {
         top: 0;
         bottom: 0;
         width: 34px;
+        display: flex;
         align-items: center;
         pointer-events: none;
         z-index: 2;
@@ -1926,7 +1929,15 @@ input:focus-visible {
         font-size: 1rem;
         line-height: 1;
         text-shadow: 0 0 10px rgba(241, 196, 15, 0.18);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
         animation: mobile-nav-hint-blink 1.9s ease-in-out infinite;
+    }
+
+    .nav-fade.is-visible {
+        opacity: 1;
+        visibility: visible;
     }
 
     .nav-fade-left {
