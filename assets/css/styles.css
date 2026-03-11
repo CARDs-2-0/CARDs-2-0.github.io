@@ -422,8 +422,7 @@ input:focus-visible {
     -ms-overflow-style: none;
 }
 
-.nav-pill::-webkit-scrollbar,
-.nav-links::-webkit-scrollbar {
+.nav-fade {
     display: none;
 }
 
@@ -1874,57 +1873,6 @@ input:focus-visible {
         overflow: hidden;
         white-space: nowrap;
         border-radius: 999px;
-        --nav-hint-left: 110px;
-    }
-
-    .nav-pill::before,
-    .nav-pill::after {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        width: 40px;
-        display: flex;
-        align-items: center;
-        pointer-events: none;
-        z-index: 2;
-        opacity: 0;
-        color: rgba(241, 196, 15, 0.82);
-        font-size: 1rem;
-        line-height: 1;
-        text-shadow: 0 0 10px rgba(241, 196, 15, 0.18);
-        transition: opacity 0.22s ease;
-    }
-
-    .nav-pill::before {
-        content: "‹";
-        left: var(--nav-hint-left);
-        justify-content: flex-start;
-        padding-left: 8px;
-        background: linear-gradient(
-            90deg,
-            rgba(8, 8, 8, 0.88) 0%,
-                                    rgba(8, 8, 8, 0.56) 46%,
-                                    rgba(8, 8, 8, 0) 100%
-        );
-    }
-
-    .nav-pill::after {
-        content: "›";
-        right: 0;
-        justify-content: flex-end;
-        padding-right: 8px;
-        background: linear-gradient(
-            270deg,
-            rgba(8, 8, 8, 0.88) 0%,
-                                    rgba(8, 8, 8, 0.56) 46%,
-                                    rgba(8, 8, 8, 0) 100%
-        );
-    }
-
-    .nav-pill.has-nav-overflow:not(.is-nav-start)::before,
-    .nav-pill.has-nav-overflow:not(.is-nav-end)::after {
-        opacity: 0.92;
-        animation: mobile-nav-hint-blink 1.9s ease-in-out infinite;
     }
 
     .brand {
@@ -1964,6 +1912,44 @@ input:focus-visible {
 
     .nav-links::-webkit-scrollbar {
         display: none;
+    }
+
+    .nav-fade {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 34px;
+        align-items: center;
+        pointer-events: none;
+        z-index: 2;
+        color: rgba(241, 196, 15, 0.82);
+        font-size: 1rem;
+        line-height: 1;
+        text-shadow: 0 0 10px rgba(241, 196, 15, 0.18);
+        animation: mobile-nav-hint-blink 1.9s ease-in-out infinite;
+    }
+
+    .nav-fade-left {
+        justify-content: flex-start;
+        padding-left: 8px;
+        background: linear-gradient(
+            90deg,
+            rgba(8, 8, 8, 0.88) 0%,
+                                    rgba(8, 8, 8, 0.56) 46%,
+                                    rgba(8, 8, 8, 0) 100%
+        );
+    }
+
+    .nav-fade-right {
+        right: 0;
+        justify-content: flex-end;
+        padding-right: 8px;
+        background: linear-gradient(
+            270deg,
+            rgba(8, 8, 8, 0.88) 0%,
+                                    rgba(8, 8, 8, 0.56) 46%,
+                                    rgba(8, 8, 8, 0) 100%
+        );
     }
 
     .site-header .container::before,

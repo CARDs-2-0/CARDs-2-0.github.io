@@ -13,34 +13,44 @@
     const navLinks = navPill?.querySelector(".nav-links");
     const brand = navPill?.querySelector(".brand");
 
-    if (!navPill || !navLinks || !brand) {
+    if (!navPill || !navLinks) {
         return;
     }
 
     const mobileQuery = window.matchMedia("(max-width: 760px)");
 
+    const fadeLeft = document.createElement("span");
+    fadeLeft.className = "nav-fade nav-fade-left";
+    fadeLeft.setAttribute("aria-hidden", "true");
+    fadeLeft.textContent = "\u2039";
+
+    const fadeRight = document.createElement("span");
+    fadeRight.className = "nav-fade nav-fade-right";
+    fadeRight.setAttribute("aria-hidden", "true");
+    fadeRight.textContent = "\u203A";
+
+    navPill.appendChild(fadeLeft);
+    navPill.appendChild(fadeRight);
+
     const updateScrollableNavState = () => {
         if (!mobileQuery.matches) {
-            navPill.classList.remove("has-nav-overflow", "is-nav-start", "is-nav-end");
-            navPill.style.removeProperty("--nav-hint-left");
+            fadeLeft.style.display = "none";
+            fadeRight.style.display = "none";
             navLinks.scrollLeft = 0;
             return;
         }
-
-        const navPillRect = navPill.getBoundingClientRect();
-        const navLinksRect = navLinks.getBoundingClientRect();
-        const leftHintStart = Math.max(0, Math.round(navLinksRect.left - navPillRect.left));
-
-        navPill.style.setProperty("--nav-hint-left", `${leftHintStart}px`);
 
         const maxScroll = Math.max(0, navLinks.scrollWidth - navLinks.clientWidth);
         const hasOverflow = maxScroll > 4;
         const atStart = navLinks.scrollLeft <= 4;
         const atEnd = !hasOverflow || navLinks.scrollLeft >= maxScroll - 4;
 
-        navPill.classList.toggle("has-nav-overflow", hasOverflow);
-        navPill.classList.toggle("is-nav-start", atStart);
-        navPill.classList.toggle("is-nav-end", atEnd);
+        if (brand) {
+            fadeLeft.style.left = `${brand.offsetLeft + brand.offsetWidth}px`;
+        }
+
+        fadeLeft.style.display = hasOverflow && !atStart ? "flex" : "none";
+        fadeRight.style.display = hasOverflow && !atEnd ? "flex" : "none";
     };
 
     navLinks.addEventListener("scroll", updateScrollableNavState, { passive: true });
