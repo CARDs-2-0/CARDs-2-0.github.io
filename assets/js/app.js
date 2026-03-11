@@ -11,9 +11,8 @@
 (() => {
     const navPill = document.querySelector(".nav-pill");
     const navLinks = navPill?.querySelector(".nav-links");
-    const navContainer = navPill?.closest(".container");
 
-    if (!navPill || !navLinks || !navContainer) {
+    if (!navPill || !navLinks) {
         return;
     }
 
@@ -21,17 +20,19 @@
 
     const updateScrollableNavState = () => {
         if (!mobileQuery.matches) {
-            navContainer.classList.remove("has-nav-overflow", "is-nav-end");
+            navLinks.classList.remove("has-nav-overflow", "is-nav-start", "is-nav-end");
             navLinks.scrollLeft = 0;
             return;
         }
 
         const maxScroll = Math.max(0, navLinks.scrollWidth - navLinks.clientWidth);
         const hasOverflow = maxScroll > 4;
+        const atStart = navLinks.scrollLeft <= 4;
         const atEnd = !hasOverflow || navLinks.scrollLeft >= maxScroll - 4;
 
-        navContainer.classList.toggle("has-nav-overflow", hasOverflow);
-        navContainer.classList.toggle("is-nav-end", atEnd);
+        navLinks.classList.toggle("has-nav-overflow", hasOverflow);
+        navLinks.classList.toggle("is-nav-start", atStart);
+        navLinks.classList.toggle("is-nav-end", atEnd);
     };
 
     navLinks.addEventListener("scroll", updateScrollableNavState, { passive: true });
